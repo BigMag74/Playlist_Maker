@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="common_padding">16dp</dimen>
+    <dimen name="padding_after_icon">10dp</dimen>
+    <dimen name="text_size">22sp</dimen>
+    <dimen name="text_size_small">16sp</dimen>
+    <dimen name="corner_radius">16dp</dimen>
+    <dimen name="settings_item_size">61dp</dimen>
+</resources>
