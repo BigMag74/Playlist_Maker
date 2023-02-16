@@ -8,6 +8,28 @@
     android:orientation="vertical"
     tools:context=".SearchActivity">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/backButton"
+            style="@style/backButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="20dp"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            style="@style/settingsTextViewStyle"
+            android:layout_marginStart="64dp"
+            android:text="@string/search"
+            android:textSize="@dimen/text_size"
+            android:textStyle="bold"/>
+    </FrameLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -25,11 +25,7 @@
             android:layout_marginStart="64dp"
             android:text="@string/settings"
             android:textSize="@dimen/text_size"
-            android:textStyle="bold"
-            app:icon="@drawable/back_icon"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/padding_after_icon"
-            app:iconTint="@color/black" />
+            android:textStyle="bold"/>
     </FrameLayout>
 
     <FrameLayout

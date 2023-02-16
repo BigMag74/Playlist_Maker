@@ -14,11 +14,13 @@ class SearchActivity : AppCompatActivity() {
         const val SEARCH_TEXT = "SEARCH_TEXT"
     }
 
+    var editTextText = ""
+
     lateinit var searchEditText: EditText
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_TEXT, searchEditText.text.toString())
+        outState.putString(SEARCH_TEXT, editTextText)
 
     }
 
@@ -33,6 +35,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchEditText = findViewById<EditText>(R.id.searchEditText)
         val crossButton = findViewById<ImageView>(R.id.crossButton)
+        val backButton = findViewById<ImageView>(R.id.backButton)
 
         val searchButtonTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(
@@ -45,6 +48,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 crossButton.visibility = clearButtonVisibility(s)
+                editTextText = s.toString()
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -54,6 +58,10 @@ class SearchActivity : AppCompatActivity() {
 
         crossButton.setOnClickListener {
             searchEditText.setText("")
+        }
+
+        backButton.setOnClickListener {
+            onBackPressed()
         }
 
     }
