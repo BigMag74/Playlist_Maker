@@ -17,6 +17,8 @@ class SearchActivity : AppCompatActivity() {
     var editTextText = ""
 
     lateinit var searchEditText: EditText
+    lateinit var crossButton: ImageView
+    lateinit var backButton: ImageView
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -33,9 +35,9 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        searchEditText = findViewById<EditText>(R.id.searchEditText)
-        val crossButton = findViewById<ImageView>(R.id.crossButton)
-        val backButton = findViewById<ImageView>(R.id.backButton)
+        searchEditText = findViewById(R.id.searchEditText)
+        crossButton = findViewById(R.id.crossButton)
+        backButton = findViewById(R.id.backButton)
 
         val searchButtonTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(
@@ -66,12 +68,14 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
+    private fun clearButtonVisibility(s: CharSequence?): Int {
+        return if (s.isNullOrEmpty()) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+    }
+
 }
 
-private fun clearButtonVisibility(s: CharSequence?): Int {
-    return if (s.isNullOrEmpty()) {
-        View.GONE
-    } else {
-        View.VISIBLE
-    }
-}
+

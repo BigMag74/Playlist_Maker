@@ -27,11 +27,12 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
         supportButton.setOnClickListener{
-            val intent = Intent(Intent.ACTION_SENDTO)
-            intent.data = Uri.parse("mailto:")
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.my_email)))
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_text))
+            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.my_email)))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.email_text))
+            }
             startActivity(intent)
         }
         userAgreementButton.setOnClickListener{
