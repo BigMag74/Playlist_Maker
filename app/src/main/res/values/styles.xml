@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="mainScreenButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="iconPadding">@dimen/padding_after_icon</item>
+        <item name="android:layout_weight">1</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/activity_main_text_color</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="cornerRadius">@dimen/corner_radius</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconTint">@color/black</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+
+    </style>
+
+    <style name="settingsTextViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginStart">@dimen/common_padding</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+    </style>
+
+    <style name="iconsStyle">
+        <item name="tint">@color/gray</item>
+    </style>
+
+    <style name="backButtonStyle">
+        <item name="tint">@color/black</item>
+    </style>
+
+    <style name="switchStyle">
+        <item name="thumbTint">@color/gray</item>
+        <item name="trackTint">@color/gray_light</item>
+    </style>
+
+    <style name="editTextStyle">
+        <item name="textFillColor">@color/black</item>
+    </style>
+
+</resources>
