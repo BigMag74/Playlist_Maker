@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/search_padding_start"
+        android:layout_marginTop="@dimen/search_padding_top_bot"
+        android:layout_marginEnd="@dimen/search_padding_end"
+        android:layout_marginBottom="@dimen/search_padding_top_bot"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/trackIcon"
+            android:layout_width="45dp"
+            android:layout_height="45dp" />
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/trackTitle"
+                    style="@style/settingsTextViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/search_padding_top_bot"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="@dimen/search_padding_end"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+
+                <TextView
+                    android:id="@+id/trackHint"
+                    style="@style/settingsTextViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/search_padding_top_bot"
+                    android:ellipsize="end"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="@dimen/hint_size" />
+
+            </LinearLayout>
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="@dimen/search_padding_end"
+        android:src="@drawable/arrow_forward"
+        app:tint="?attr/colorOnSecondary" />
+
+
+</FrameLayout>

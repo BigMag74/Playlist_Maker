@@ -27,7 +27,7 @@
             android:layout_marginStart="64dp"
             android:text="@string/search"
             android:textSize="@dimen/text_size"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </FrameLayout>
 
     <LinearLayout
@@ -37,8 +37,8 @@
         android:orientation="horizontal">
 
         <EditText
-            style="@style/editTextStyle"
             android:id="@+id/searchEditText"
+            style="@style/editTextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -47,14 +47,20 @@
             android:maxLines="1" />
 
         <ImageView
-            style="@style/iconsStyle"
             android:id="@+id/crossButton"
+            style="@style/iconsStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:src="@drawable/cross"
             android:visibility="gone" />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
 </LinearLayout>
