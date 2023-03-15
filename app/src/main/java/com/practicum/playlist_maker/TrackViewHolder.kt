@@ -9,13 +9,15 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
 class TrackViewHolder(itemView: View) : ViewHolder(itemView) {
     private val trackTitle: TextView = itemView.findViewById(R.id.trackTitle)
-    private val trackHint: TextView = itemView.findViewById(R.id.trackHint)
+    private val trackArtist: TextView = itemView.findViewById(R.id.trackArtist)
+    private val trackTime: TextView = itemView.findViewById(R.id.trackTime)
     private val trackIcon: ImageView = itemView.findViewById(R.id.trackIcon)
 
 
     fun bind(model: Track) {
         trackTitle.text = model.trackName
-        trackHint.text = model.artistName + "  ●  " + model.trackTime
+        trackArtist.text = model.artistName
+        trackTime.text = model.trackTime
 
         Glide.with(itemView)
             .load(model.artworkUrl100)

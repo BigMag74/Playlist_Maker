@@ -17,10 +17,10 @@ class SearchActivity : AppCompatActivity() {
 
     var editTextText = ""
 
-    lateinit var searchEditText: EditText
-    lateinit var crossButton: ImageView
-    lateinit var backButton: ImageView
-    lateinit var recyclerView: RecyclerView
+    private lateinit var searchEditText: EditText
+    private lateinit var crossButton: ImageView
+    private lateinit var backButton: ImageView
+    private lateinit var recyclerView: RecyclerView
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

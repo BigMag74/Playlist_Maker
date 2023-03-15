@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -19,38 +20,61 @@
             android:layout_height="45dp" />
 
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/trackTitle"
+                style="@style/settingsTextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/search_padding_top_bot"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="@dimen/search_padding_end"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="Track Name" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/trackTitle"
-                    style="@style/settingsTextViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/search_padding_top_bot"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginEnd="@dimen/search_padding_end"
-                    android:ellipsize="end"
-                    android:maxLines="1" />
-
-                <TextView
-                    android:id="@+id/trackHint"
+                    android:id="@+id/trackArtist"
                     style="@style/settingsTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/search_padding_top_bot"
                     android:ellipsize="end"
                     android:textColor="?attr/colorOnSecondary"
-                    android:textSize="@dimen/hint_size" />
+                    android:textSize="@dimen/hint_size"
+                    tools:text="Artist" />
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/search_padding_top_bot"
+                    android:src="@drawable/point"
+                    app:tint="?attr/colorOnSecondary" />
+
+                <TextView
+                    android:id="@+id/trackTime"
+                    style="@style/settingsTextViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/search_padding_top_bot"
+                    android:ellipsize="end"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="@dimen/hint_size"
+                    tools:text="time" />
 
             </LinearLayout>
-        </FrameLayout>
+        </LinearLayout>
 
 
     </LinearLayout>
