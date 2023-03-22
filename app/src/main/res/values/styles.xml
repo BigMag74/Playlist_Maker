@@ -44,4 +44,8 @@
         <item name="textFillColor">@color/black</item>
     </style>
 
+    <style name="errorText">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>

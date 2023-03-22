@@ -13,4 +13,6 @@
     <string name="email_subject">Message to the developers of the Playlist Maker app</string>
     <string name="email_text">Thanks to the developers for the cool app!</string>
     <string name="user_agreement_URL">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="nothing_found">Nothing found</string>
+    <string name="internet_issues">Internet issues\n\nThe download failed. Check your internet connection</string>
 </resources>
