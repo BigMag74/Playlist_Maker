@@ -91,7 +91,26 @@
                 android:textAlignment="center"
                 android:textSize="@dimen/text_size"
                 android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/refreshButton"
+                style="@style/refreshButton"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/common_padding"
+                android:fontFamily="@font/ys_display_regular"
+                android:text="Обновить"
+                android:textAllCaps="false"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="normal"
+                app:cornerRadius="@dimen/corner_radius"
+                android:visibility="gone"/>
+
+
         </LinearLayout>
+
+
     </FrameLayout>
 
 

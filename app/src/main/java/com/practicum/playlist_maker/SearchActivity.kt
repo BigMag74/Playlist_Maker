@@ -1,13 +1,13 @@
 package com.practicum.playlist_maker
 
-import android.content.res.Configuration
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -42,6 +42,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var placeholderMessage: TextView
     private lateinit var placeholderImage: ImageView
+    private lateinit var refreshButton: Button
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -57,7 +58,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
         searchEditText = findViewById(R.id.searchEditText)
         crossButton = findViewById(R.id.crossButton)
@@ -65,6 +65,7 @@ class SearchActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.searchRecyclerView)
         placeholderMessage = findViewById(R.id.placeholderMessage)
         placeholderImage = findViewById(R.id.placeholderImage)
+        refreshButton = findViewById(R.id.refreshButton)
 
 
         adapter.tracks = tracks
@@ -92,45 +93,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (editTextText.isNotEmpty()) {
-                    itunesService.getTrack(editTextText).enqueue(object : Callback<TrackResponse> {
-                        override fun onResponse(
-                            call: Call<TrackResponse>,
-                            response: Response<TrackResponse>
-                        ) {
-                            if (response.code() == 200) {
-                                tracks.clear()
-                                if (response.body()?.results?.isNotEmpty() == true) {
-                                    tracks.addAll(response.body()?.results!!)
-                                    adapter.notifyDataSetChanged()
-                                }
-                                if (tracks.isEmpty()) {
-                                    showNothingFoundMessage(
-                                        getString(R.string.nothing_found),
-                                        "",
-                                        currentNightMode
-                                    )
-                                } else {
-                                    showInternetIssuesMessage("", "", currentNightMode)
-                                }
-                            } else {
-                                showInternetIssuesMessage(
-                                    getString(R.string.internet_issues),
-                                    response.code().toString(),
-                                    currentNightMode
-                                )
-                            }
-                        }
-
-                        override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                            showInternetIssuesMessage(
-                                getString(R.string.internet_issues),
-                                t.message.toString(),
-                                currentNightMode
-                            )
-                        }
-                    })
-                }
+                search()
                 true
             }
             false
@@ -138,57 +101,111 @@ class SearchActivity : AppCompatActivity() {
 
         crossButton.setOnClickListener {
             searchEditText.setText("")
+            tracks.clear()
+            adapter.notifyDataSetChanged()
+            placeholderMessage.visibility = View.GONE
+            placeholderImage.visibility = View.GONE
+            refreshButton.visibility = View.GONE
         }
 
         backButton.setOnClickListener {
             onBackPressed()
         }
 
+        refreshButton.setOnClickListener {
+            refreshButton.visibility = View.GONE
+            search()
+        }
+
+    }
+
+    private fun search() {
+
+        if (editTextText.isNotEmpty()) {
+            itunesService.getTrack(editTextText).enqueue(object : Callback<TrackResponse> {
+                override fun onResponse(
+                    call: Call<TrackResponse>,
+                    response: Response<TrackResponse>
+                ) {
+                    if (response.code() == 200) {
+                        tracks.clear()
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            tracks.addAll(response.body()?.results!!)
+                            adapter.notifyDataSetChanged()
+                        }
+                        if (tracks.isEmpty()) {
+                            showNothingFoundMessage(
+                                getString(R.string.nothing_found),
+                                ""
+                            )
+                        } else {
+                            showInternetIssuesMessage("", "")
+                        }
+                    } else {
+                        showInternetIssuesMessage(
+                            getString(R.string.internet_issues),
+                            response.code().toString()
+                        )
+                    }
+                }
+
+                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    showInternetIssuesMessage(
+                        getString(R.string.internet_issues),
+                        t.message.toString()
+                    )
+                }
+            })
+        }
     }
 
     private fun showInternetIssuesMessage(
         text: String,
-        additionalMessage: String,
-        currentNightMode: Int
+        additionalMessage: String
     ) {
         if (text.isNotEmpty()) {
             placeholderMessage.visibility = View.VISIBLE
+            placeholderImage.visibility = View.VISIBLE
+            refreshButton.visibility = View.VISIBLE
+
             tracks.clear()
             adapter.notifyDataSetChanged()
+
             placeholderMessage.text = text
-            when (currentNightMode) {
-                Configuration.UI_MODE_NIGHT_NO -> placeholderImage.setImageResource(R.drawable.internet_issues)
-                Configuration.UI_MODE_NIGHT_YES -> placeholderImage.setImageResource(R.drawable.internet_issues_night)
-            }
+            placeholderImage.setImageResource(R.drawable.internet_issues)
+
             if (additionalMessage.isNotEmpty()) {
                 Toast.makeText(applicationContext, additionalMessage, Toast.LENGTH_LONG)
                     .show()
             }
         } else {
             placeholderMessage.visibility = View.GONE
+            placeholderImage.visibility = View.GONE
+            refreshButton.visibility = View.GONE
         }
     }
 
     private fun showNothingFoundMessage(
         text: String,
-        additionalMessage: String,
-        currentNightMode: Int
+        additionalMessage: String
     ) {
         if (text.isNotEmpty()) {
             placeholderMessage.visibility = View.VISIBLE
+            placeholderImage.visibility = View.VISIBLE
+
             tracks.clear()
             adapter.notifyDataSetChanged()
+
             placeholderMessage.text = text
-            when (currentNightMode) {
-                Configuration.UI_MODE_NIGHT_NO -> placeholderImage.setImageResource(R.drawable.nothing_found)
-                Configuration.UI_MODE_NIGHT_YES -> placeholderImage.setImageResource(R.drawable.nothing_found_night)
-            }
+            placeholderImage.setImageResource(R.drawable.nothing_found)
+
             if (additionalMessage.isNotEmpty()) {
                 Toast.makeText(applicationContext, additionalMessage, Toast.LENGTH_LONG)
                     .show()
             }
         } else {
             placeholderMessage.visibility = View.GONE
+            placeholderImage.visibility = View.GONE
         }
     }
 
