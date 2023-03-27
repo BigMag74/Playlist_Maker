@@ -100,12 +100,12 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/common_padding"
                 android:fontFamily="@font/ys_display_regular"
-                android:text="Обновить"
+                android:text="@string/refresh"
                 android:textAllCaps="false"
                 android:textSize="@dimen/text_size_small"
                 android:textStyle="normal"
-                app:cornerRadius="@dimen/corner_radius"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                app:cornerRadius="@dimen/corner_radius" />
 
 
         </LinearLayout>
