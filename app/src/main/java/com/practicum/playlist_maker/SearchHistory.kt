@@ -14,17 +14,13 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
     fun addTrack(track: Track) {
         val tracks = read().toMutableList()
-        var theSame = false
 
-        for (element in tracks) {
-            if (element.trackId == track.trackId) {
-                tracks.remove(element)
-                theSame = true
-                break
-            }
+        if (tracks.contains(track)) {
+            tracks.remove(track)
         }
-        if (!theSame && tracks.size >= 10) {
-            tracks.removeAt(9)
+
+        if (tracks.size >= 10) {
+            tracks.removeAt(0)
         }
         tracks.add(track)
 

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -89,11 +90,14 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter = TrackAdapter(searchHistory)
         trackAdapter.tracks = tracks
         recyclerView.adapter = trackAdapter
+
         trackAdapter.onItemClick = {
+            searchHistory.addTrack(it)
             tracksInHistory = searchHistory.getTracks().toCollection(ArrayList())
             searchHistoryAdapter.tracks = tracksInHistory
             searchHistoryAdapter.notifyDataSetChanged()
         }
+
         tracksInHistory = searchHistory.getTracks().toCollection(ArrayList())
         searchHistoryAdapter.tracks = tracksInHistory
         historyRecyclerView.adapter = searchHistoryAdapter
@@ -140,7 +144,9 @@ class SearchActivity : AppCompatActivity() {
 
         clearHistoryButton.setOnClickListener {
             searchHistory.clearHistory()
-            searchHistoryAdapter.tracks = ArrayList()
+            tracksInHistory = ArrayList()
+            searchHistoryAdapter.tracks = tracksInHistory
+            searchHistoryAdapter.notifyDataSetChanged()
             historyLayout.visibility = View.GONE
         }
     }
@@ -254,9 +260,10 @@ class SearchActivity : AppCompatActivity() {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (searchEditText.hasFocus() && s?.isEmpty() == true) {
-                if (tracksInHistory.isNotEmpty()) {
+                if (tracksInHistory.isNotEmpty())
                     historyLayout.visibility = View.VISIBLE
-                }
+                else
+                    historyLayout.visibility = View.GONE
 
                 recyclerView.visibility = View.GONE
                 placeholderMessage.visibility = View.GONE
