@@ -1,6 +1,7 @@
 package com.practicum.playlist_maker
 
 
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,6 +29,7 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
         const val TRACK_LIST_SHARED_PREFERENCES = "track_list_shared_preferences"
+        const val TRACK = "TRACK"
     }
 
     private lateinit var searchEditText: EditText
@@ -45,7 +48,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackAdapter: TrackAdapter
     private val searchHistoryAdapter = SearchHistoryAdapter()
 
-    private val itunesBaseUrl = "https://itunes.apple.com"
+    private val itunesBaseUrl = "http://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
@@ -73,6 +76,7 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
 
 
+
         searchEditText = findViewById(R.id.searchEditText)
         crossButton = findViewById(R.id.crossButton)
         backButton = findViewById(R.id.backButton)
@@ -87,19 +91,23 @@ class SearchActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences(TRACK_LIST_SHARED_PREFERENCES, MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPreferences)
 
-        trackAdapter = TrackAdapter(searchHistory)
+        trackAdapter = TrackAdapter()
         trackAdapter.tracks = tracks
         recyclerView.adapter = trackAdapter
 
-        trackAdapter.onItemClick = {
-            searchHistory.addTrack(it)
+        val onItemClick = { track: Track ->
+            val intent = Intent(this, AudioPlayerActivity::class.java)
+            intent.putExtra(TRACK, Gson().toJson(track))
+            startActivity(intent)
+            searchHistory.addTrack(track)
             tracksInHistory = searchHistory.getTracks().toCollection(ArrayList())
             searchHistoryAdapter.tracks = tracksInHistory
-            searchHistoryAdapter.notifyDataSetChanged()
         }
+        trackAdapter.onItemClick = onItemClick
 
         tracksInHistory = searchHistory.getTracks().toCollection(ArrayList())
         searchHistoryAdapter.tracks = tracksInHistory
+        searchHistoryAdapter.onItemClick = onItemClick
         historyRecyclerView.adapter = searchHistoryAdapter
         if (tracksInHistory.isEmpty()) historyLayout.visibility = View.GONE
 
@@ -121,6 +129,11 @@ class SearchActivity : AppCompatActivity() {
         setOnClickListeners()
 
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        searchHistoryAdapter.notifyDataSetChanged()
     }
 
     private fun setOnClickListeners() {
@@ -152,6 +165,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search() {
+        Log.e("myTag", "WORKING")
 
         if (editTextText.isNotEmpty()) {
             itunesService.getTrack(editTextText).enqueue(object : Callback<TrackResponse> {
@@ -159,6 +173,7 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
+                    Log.e("myTag", response.code().toString())
                     if (response.code() == 200) {
                         tracks.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
@@ -184,6 +199,7 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    Log.e("myTag", t.message.toString())
                     showMessage(
                         Message.ERROR,
                         getString(R.string.internet_issues),

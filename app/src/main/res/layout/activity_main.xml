@@ -26,8 +26,9 @@
     <Button
         android:id="@+id/mediaLibraryButton"
         style="@style/mainScreenButtonStyle"
+        android:scaleType="center"
         android:text="@string/media_library"
-        app:icon="@drawable/playlists" />
+        app:icon="@drawable/media_library_icon" />
 
     <Button
         android:id="@+id/settingsButton"

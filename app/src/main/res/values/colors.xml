@@ -13,5 +13,6 @@
     <color name="activity_main_text_color">#1A1B22</color>
     <color name="settings_background">#F5F5F5</color>
     <color name="gray">#AEAFB4</color>
+    <color name="dark_gray">#40FFFFFF</color>
     <color name="gray_light">#E6E8EB</color>
 </resources>
