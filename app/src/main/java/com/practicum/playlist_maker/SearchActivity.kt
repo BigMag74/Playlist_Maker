@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -26,11 +25,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class SearchActivity : AppCompatActivity() {
-    companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
-        const val TRACK_LIST_SHARED_PREFERENCES = "track_list_shared_preferences"
-        const val TRACK = "TRACK"
-    }
 
     private lateinit var searchEditText: EditText
     private lateinit var crossButton: ImageView
@@ -165,7 +159,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search() {
-        Log.e("myTag", "WORKING")
 
         if (editTextText.isNotEmpty()) {
             itunesService.getTrack(editTextText).enqueue(object : Callback<TrackResponse> {
@@ -173,7 +166,6 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
-                    Log.e("myTag", response.code().toString())
                     if (response.code() == 200) {
                         tracks.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
@@ -199,7 +191,6 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    Log.e("myTag", t.message.toString())
                     showMessage(
                         Message.ERROR,
                         getString(R.string.internet_issues),
@@ -302,6 +293,12 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+    companion object {
+        const val SEARCH_TEXT = "SEARCH_TEXT"
+        const val TRACK_LIST_SHARED_PREFERENCES = "track_list_shared_preferences"
+        const val TRACK = "TRACK"
     }
 
 }

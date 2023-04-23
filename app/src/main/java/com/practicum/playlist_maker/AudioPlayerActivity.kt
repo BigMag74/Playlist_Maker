@@ -1,17 +1,15 @@
 package com.practicum.playlist_maker
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
 import com.practicum.playlist_maker.SearchActivity.Companion.TRACK
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 
 
@@ -60,9 +58,11 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         trackName.text = track.trackName
         artist.text = track.artistName
+        playTime.text = "00:00"
         duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
-        if (track.collectionName.substring(track.collectionName.length - 6 until track.collectionName.length) == "Single") {
+
+        if (track.collectionName == "${track.trackName} - Single") {
             albumRight.visibility = View.GONE
             albumLeft.visibility = View.GONE
         } else {
@@ -71,7 +71,11 @@ class AudioPlayerActivity : AppCompatActivity() {
             albumRight.text = track.collectionName
         }
 
-        year.text = track.releaseDate.substring(0..3)
+        val calendar: Calendar = GregorianCalendar()
+        calendar.time =
+            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate) as Date
+        year.text = calendar.get(Calendar.YEAR).toString()
+
         genre.text = track.primaryGenreName
         country.text = track.country
     }
