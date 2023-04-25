@@ -51,18 +51,18 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         Glide.with(trackIcon)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
-            .placeholder(R.drawable.playlists)
+            .placeholder(R.drawable.album)
             .centerCrop()
             .transform(RoundedCorners(8))
             .into(trackIcon)
 
         trackName.text = track.trackName
         artist.text = track.artistName
-        playTime.text = "00:00"
+        playTime.text = getString(R.string.time00_00)
         duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
 
-        if (track.collectionName == "${track.trackName} - Single") {
+        if (track.collectionName == "${track.trackName} - ${getString(R.string.trackWithoutAlbum)}") {
             albumRight.visibility = View.GONE
             albumLeft.visibility = View.GONE
         } else {
