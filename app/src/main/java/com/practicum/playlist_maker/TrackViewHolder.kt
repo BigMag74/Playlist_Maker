@@ -19,11 +19,12 @@ class TrackViewHolder(itemView: View) : ViewHolder(itemView) {
     fun bind(model: Track) {
         trackTitle.text = model.trackName
         trackArtist.text = model.artistName
-        trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
+        trackTime.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
 
         Glide.with(itemView)
             .load(model.artworkUrl100)
-            .placeholder(R.drawable.playlists)
+            .placeholder(R.drawable.album)
             .centerCrop()
             .transform(RoundedCorners(10))
             .into(trackIcon)
