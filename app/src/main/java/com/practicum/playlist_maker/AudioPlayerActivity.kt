@@ -62,7 +62,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
 
-        if (track.collectionName == "${track.trackName} - ${getString(R.string.trackWithoutAlbum)}") {
+        if (track.collectionName == "${track.trackName} - $SINGLE") {
             albumRight.visibility = View.GONE
             albumLeft.visibility = View.GONE
         } else {
@@ -79,4 +79,9 @@ class AudioPlayerActivity : AppCompatActivity() {
         genre.text = track.primaryGenreName
         country.text = track.country
     }
+
+    companion object{
+        const val SINGLE = "Single"
+    }
+
 }

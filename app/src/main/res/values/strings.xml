@@ -22,6 +22,5 @@
     <string name="year">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
-    <string name="trackWithoutAlbum" translatable="false">Single</string>
     <string name="time00_00" translatable="false">00:00</string>
 </resources>
