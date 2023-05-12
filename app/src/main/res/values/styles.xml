@@ -27,7 +27,7 @@
         <item name="fontFamily">@font/ys_display_regular</item>
     </style>
 
-    <style name="iconsStyle">
+    <style name="settingsIcons">
         <item name="tint">@color/gray</item>
     </style>
 
@@ -41,7 +41,7 @@
     </style>
 
     <style name="editTextStyle">
-        <item name="textFillColor">@color/black</item>
+        <item name="android:textColorHint">@color/gray</item>
     </style>
 
     <style name="blackAndWhite">
@@ -56,6 +56,10 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="cornerRadius">@dimen/corner_radius</item>
+    </style>
+
+    <style name="searchIcons">
+        <item name="tint">@color/gray</item>
     </style>
 
     <style name="audio_player_left_border_style">

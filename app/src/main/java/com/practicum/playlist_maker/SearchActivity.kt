@@ -1,6 +1,7 @@
 package com.practicum.playlist_maker
 
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -146,10 +148,13 @@ class SearchActivity : AppCompatActivity() {
         crossButton.setOnClickListener {
             searchEditText.setText("")
             tracks.clear()
+            handler.removeCallbacks(searchRunnable)
             trackAdapter.notifyDataSetChanged()
             placeholderMessage.visibility = View.GONE
             placeholderImage.visibility = View.GONE
             refreshButton.visibility = View.GONE
+            val inputMethod = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethod.hideSoftInputFromWindow(window.decorView.windowToken, 0)
         }
 
         backButton.setOnClickListener {
@@ -296,6 +301,8 @@ class SearchActivity : AppCompatActivity() {
                     historyLayout.visibility = View.VISIBLE
                 else
                     historyLayout.visibility = View.GONE
+
+                handler.removeCallbacks(searchRunnable)
 
                 recyclerView.visibility = View.GONE
                 placeholderMessage.visibility = View.GONE
