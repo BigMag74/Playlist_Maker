@@ -19,7 +19,7 @@ class TrackViewHolder(itemView: View) : ViewHolder(itemView) {
     fun bind(model: Track) {
         trackTitle.text = model.trackName
         trackArtist.text = model.artistName
-        trackTime.text = DateTimeUtil().msecToMMSS(model.trackTimeMillis)
+        trackTime.text = DateTimeUtil.msecToMMSS(model.trackTimeMillis)
 
         Glide.with(itemView)
             .load(model.artworkUrl100)

@@ -38,8 +38,6 @@ class AudioPlayerActivity : AppCompatActivity(), AudioPlayerView {
 
     private lateinit var audioPlayerPresenter: AudioPlayerPresenter
 
-    private val dateTimeUtil = DateTimeUtil()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,12 +104,12 @@ class AudioPlayerActivity : AppCompatActivity(), AudioPlayerView {
     }
 
     private fun initializeDuration() {
-        duration.text = dateTimeUtil.msecToMMSS(track.trackTimeMillis)
+        duration.text = DateTimeUtil.msecToMMSS(track.trackTimeMillis)
 
     }
 
     private fun initializeYear() {
-        year.text = dateTimeUtil.stringToYear(track.releaseDate)
+        year.text = DateTimeUtil.stringToYear(track.releaseDate)
     }
 
     private fun initializeAlbum() {
@@ -129,9 +127,8 @@ class AudioPlayerActivity : AppCompatActivity(), AudioPlayerView {
     private fun updateTime(): Runnable {
         return object : Runnable {
             override fun run() {
-                playTime.text = dateTimeUtil.msecToMMSS(audioPlayerPresenter.getCurrentPosition())
+                playTime.text = DateTimeUtil.msecToMMSS(audioPlayerPresenter.getCurrentPosition())
                 handler.postDelayed(this, 400L)
-
             }
 
         }
