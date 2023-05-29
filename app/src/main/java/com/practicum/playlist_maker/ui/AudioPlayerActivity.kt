@@ -3,7 +3,6 @@ package com.practicum.playlist_maker.ui
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,12 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlist_maker.R
-import com.practicum.playlist_maker.Track
+import com.practicum.playlist_maker.domain.model.Track
 import com.practicum.playlist_maker.domain.usecase.GetTrackUseCase
 import com.practicum.playlist_maker.presentation.AudioPlayerPresenter
 import com.practicum.playlist_maker.presentation.AudioPlayerView
-import java.text.SimpleDateFormat
-import java.util.*
+import com.practicum.playlist_maker.utils.DateTimeUtil
 
 
 class AudioPlayerActivity : AppCompatActivity(), AudioPlayerView {
@@ -39,6 +37,8 @@ class AudioPlayerActivity : AppCompatActivity(), AudioPlayerView {
     private lateinit var track: Track
 
     private lateinit var audioPlayerPresenter: AudioPlayerPresenter
+
+    private val dateTimeUtil = DateTimeUtil()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,14 +106,12 @@ class AudioPlayerActivity : AppCompatActivity(), AudioPlayerView {
     }
 
     private fun initializeDuration() {
-        duration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+        duration.text = dateTimeUtil.msecToMMSS(track.trackTimeMillis)
+
     }
 
     private fun initializeYear() {
-        val calendar: Calendar = GregorianCalendar()
-        calendar.time =
-            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate) as Date
-        year.text = calendar.get(Calendar.YEAR).toString()
+        year.text = dateTimeUtil.stringToYear(track.releaseDate)
     }
 
     private fun initializeAlbum() {
@@ -131,10 +129,7 @@ class AudioPlayerActivity : AppCompatActivity(), AudioPlayerView {
     private fun updateTime(): Runnable {
         return object : Runnable {
             override fun run() {
-                playTime.text = SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
-                ).format(audioPlayerPresenter.getCurrentPosition())
+                playTime.text = dateTimeUtil.msecToMMSS(audioPlayerPresenter.getCurrentPosition())
                 handler.postDelayed(this, 400L)
 
             }

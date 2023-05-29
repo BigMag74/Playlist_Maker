@@ -3,7 +3,7 @@ package com.practicum.playlist_maker.domain.usecase
 import android.content.Intent
 import com.google.gson.Gson
 import com.practicum.playlist_maker.SearchActivity
-import com.practicum.playlist_maker.Track
+import com.practicum.playlist_maker.domain.model.Track
 
 class GetTrackUseCase(private val intent: Intent) {
 
