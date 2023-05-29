@@ -1,4 +1,4 @@
-package com.practicum.playlist_maker
+package com.practicum.playlist_maker.domain.model
 
 
 data class Track(

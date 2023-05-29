@@ -3,6 +3,7 @@ package com.practicum.playlist_maker
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import com.practicum.playlist_maker.domain.model.Track
 
 class SearchHistoryAdapter : Adapter<TrackViewHolder>() {
     var onItemClick: ((Track) -> Unit)? = null
