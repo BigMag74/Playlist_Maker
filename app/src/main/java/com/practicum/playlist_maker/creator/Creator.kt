@@ -1,8 +1,6 @@
 package com.practicum.playlist_maker.creator
 
-import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import com.practicum.playlist_maker.SETTINGS_PREFERENCES
 import com.practicum.playlist_maker.player.data.impl.AudioPlayerImpl
 import com.practicum.playlist_maker.player.domain.api.AudioPlayer

@@ -24,6 +24,7 @@ import com.google.gson.Gson
 import com.practicum.playlist_maker.*
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.player.ui.activity.AudioPlayerActivity
+import com.practicum.playlist_maker.search.domain.api.TracksInteractor
 import com.practicum.playlist_maker.search.ui.SearchHistoryAdapter
 import com.practicum.playlist_maker.search.ui.SearchState
 import com.practicum.playlist_maker.search.ui.TrackAdapter
@@ -133,8 +134,8 @@ class SearchActivity : AppCompatActivity() {
     private fun render(state: SearchState) {
         when (state) {
             is SearchState.Content -> showContent(state.tracks)
-            is SearchState.Empty -> showEmpty(state.message)
-            is SearchState.Error -> showError(state.errorMessage)
+            is SearchState.Empty -> showEmpty(state.emptyMessageResId)
+            is SearchState.Error -> showError(state.errorMessageResId)
             is SearchState.Loading -> showLoading()
         }
     }
@@ -151,7 +152,7 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter.notifyDataSetChanged()
     }
 
-    private fun showEmpty(emptyMessage: String) {
+    private fun showEmpty(emptyMessageResId: Int) {
         progressBar.visibility = View.GONE
         refreshButton.visibility = View.GONE
         placeholderMessage.visibility = View.VISIBLE
@@ -160,11 +161,11 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter.tracks.clear()
         trackAdapter.notifyDataSetChanged()
 
-        placeholderMessage.text = emptyMessage
+        placeholderMessage.text = getString(emptyMessageResId)
         placeholderImage.setImageResource(R.drawable.nothing_found)
     }
 
-    private fun showError(errorMessage: String) {
+    private fun showError(errorMessageResId: Int) {
         progressBar.visibility = View.GONE
         placeholderMessage.visibility = View.VISIBLE
         placeholderImage.visibility = View.VISIBLE
@@ -173,7 +174,7 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter.tracks.clear()
         trackAdapter.notifyDataSetChanged()
 
-        placeholderMessage.text = errorMessage
+        placeholderMessage.text = getString(errorMessageResId)
         placeholderImage.setImageResource(R.drawable.internet_issues)
 
     }

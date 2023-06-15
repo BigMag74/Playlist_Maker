@@ -18,7 +18,7 @@ class TracksRepositoryImpl(
             200 -> {
                 Resource.Success((response as TracksSearchResponse).results)
             }
-            else -> Resource.Error()
+            else -> Resource.ServerError()
         }
 
     }

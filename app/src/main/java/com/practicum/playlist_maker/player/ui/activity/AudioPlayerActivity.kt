@@ -10,11 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.gson.Gson
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.player.domain.model.Track
-import com.practicum.playlist_maker.player.domain.usecase.GetTrackUseCase
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
 import com.practicum.playlist_maker.player.ui.view_model.AudioPlayerViewModel
+import com.practicum.playlist_maker.search.ui.activity.SearchActivity
 import com.practicum.playlist_maker.utils.DateTimeUtil
 
 
@@ -43,13 +44,13 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player)
 
+        track = Gson().fromJson(intent.getStringExtra(SearchActivity.TRACK), Track::class.java)
+        url = track.previewUrl
+
         audioPlayerViewModel = ViewModelProvider(
             this,
-            AudioPlayerViewModel.getViewModelFactory(intent)
+            AudioPlayerViewModel.getViewModelFactory(url)
         )[AudioPlayerViewModel::class.java]
-
-        track = GetTrackUseCase(intent).execute()
-        url = track.previewUrl
 
 
         handler = Handler(Looper.getMainLooper())
@@ -138,7 +139,9 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun render(state: AudioPlayerState) {
         when (state) {
-            is AudioPlayerState.STATE_DEFAULT -> {playButton.isEnabled = false}
+            is AudioPlayerState.STATE_DEFAULT -> {
+                playButton.isEnabled = false
+            }
             is AudioPlayerState.STATE_PREPARED -> {
                 handler.removeCallbacksAndMessages(null)
                 playTime.text = getString(R.string.time00_00)

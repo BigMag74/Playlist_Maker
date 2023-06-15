@@ -1,32 +1,23 @@
 package com.practicum.playlist_maker.player.ui.view_model
 
-import android.app.Application
-import android.content.Intent
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlist_maker.creator.Creator
-import com.practicum.playlist_maker.player.data.impl.AudioPlayerImpl
 import com.practicum.playlist_maker.player.domain.api.AudioPlayer
-import com.practicum.playlist_maker.player.domain.usecase.GetTrackUseCase
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
 
-class AudioPlayerViewModel(application: Application) :
-    AndroidViewModel(application) {
+class AudioPlayerViewModel() :
+    ViewModel() {
 
     private val stateLiveData = MutableLiveData<AudioPlayerState>()
     fun observeState(): LiveData<AudioPlayerState> = stateLiveData
 
     private val audioPlayer: AudioPlayer = Creator.provideAudioPlayer()
-    private var trackUrl = ""
 
     init {
         renderState(AudioPlayerState.STATE_DEFAULT)
-        getTrackUrl()
         prepareAudioPlayer()
         setOnCompleteListener()
     }
@@ -37,9 +28,6 @@ class AudioPlayerViewModel(application: Application) :
         }
     }
 
-    private fun getTrackUrl() {
-        trackUrl = GetTrackUseCase(myIntent!!).execute().previewUrl
-    }
 
     private fun startAudioPlayer() {
         audioPlayer.startPlayer()
@@ -78,10 +66,6 @@ class AudioPlayerViewModel(application: Application) :
         stateLiveData.postValue(state)
     }
 
-    fun onPause() {
-        pauseAudioPlayer()
-        renderState(AudioPlayerState.STATE_PAUSED)
-    }
 
     override fun onCleared() {
         audioPlayer.destroyPlayer()
@@ -89,11 +73,12 @@ class AudioPlayerViewModel(application: Application) :
 
 
     companion object {
-        private var myIntent: Intent? = null
-        fun getViewModelFactory(intent: Intent): ViewModelProvider.Factory = viewModelFactory() {
-            myIntent = intent
+        private var trackUrl: String = ""
+
+        fun getViewModelFactory(url: String): ViewModelProvider.Factory = viewModelFactory() {
+            trackUrl = url
             initializer {
-                AudioPlayerViewModel(this[APPLICATION_KEY] as Application)
+                AudioPlayerViewModel()
             }
         }
     }

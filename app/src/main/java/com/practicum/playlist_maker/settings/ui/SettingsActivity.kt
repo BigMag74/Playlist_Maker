@@ -33,11 +33,7 @@ class SettingsActivity : AppCompatActivity() {
             SettingsViewModel.getViewModelFactory()
         )[SettingsViewModel::class.java]
 
-        backButton = findViewById<ImageView>(R.id.backButton)
-        shareButton = findViewById<FrameLayout>(R.id.shareButton)
-        supportButton = findViewById<FrameLayout>(R.id.supportButton)
-        userAgreementButton = findViewById<FrameLayout>(R.id.userAgreementButton)
-        themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        initViews()
 
         backButton.setOnClickListener {
             onBackPressed()
@@ -68,6 +64,14 @@ class SettingsActivity : AppCompatActivity() {
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             viewModel.switchTheme(checked)
         }
+    }
+
+    private fun initViews(){
+        backButton = findViewById<ImageView>(R.id.backButton)
+        shareButton = findViewById<FrameLayout>(R.id.shareButton)
+        supportButton = findViewById<FrameLayout>(R.id.supportButton)
+        userAgreementButton = findViewById<FrameLayout>(R.id.userAgreementButton)
+        themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
     }
 
 

@@ -1,13 +1,9 @@
 package com.practicum.playlist_maker.search.ui.view_model
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -17,10 +13,8 @@ import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.search.domain.api.TracksInteractor
 import com.practicum.playlist_maker.search.ui.SearchState
 
-class SearchViewModel(application: Application) : AndroidViewModel(application) {
+class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewModel() {
 
-
-    private val tracksInteractor = Creator.provideTracksInteractor(getApplication())
     private val handler = Handler(Looper.getMainLooper())
 
     private val stateLiveData = MutableLiveData<SearchState>()
@@ -68,16 +62,16 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                             latestSearchText = ""
                             renderState(
                                 SearchState.Error(
-                                    getApplication<Application>().getString(R.string.internet_issues),
+                                    R.string.internet_issues
                                 )
                             )
                         }
 
-                        message == "Error" -> {
+                        message == "Server error" -> {
                             latestSearchText = ""
                             renderState(
                                 SearchState.Error(
-                                    getApplication<Application>().getString(R.string.server_issues),
+                                    R.string.server_issues
                                 )
                             )
                         }
@@ -85,7 +79,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                         tracks.isEmpty() -> {
                             renderState(
                                 SearchState.Empty(
-                                    getApplication<Application>().getString(R.string.nothing_found),
+                                    R.string.nothing_found
                                 )
                             )
                         }
@@ -128,9 +122,11 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
 
+
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                SearchViewModel(this[APPLICATION_KEY] as Application)
+                val interactor = this[APPLICATION_KEY]?.let { Creator.provideTracksInteractor(it) }
+                SearchViewModel(interactor!!)
             }
         }
     }
