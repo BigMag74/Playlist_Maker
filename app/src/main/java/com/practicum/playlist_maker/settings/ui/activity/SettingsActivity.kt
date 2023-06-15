@@ -1,19 +1,15 @@
-package com.practicum.playlist_maker.settings.ui
+package com.practicum.playlist_maker.settings.ui.activity
 
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
-import com.practicum.playlist_maker.App
-import com.practicum.playlist_maker.KEY_FOR_SWITCH
 import com.practicum.playlist_maker.R
-import com.practicum.playlist_maker.SETTINGS_PREFERENCES
-import com.practicum.playlist_maker.settings.view_model.SettingsViewModel
+import com.practicum.playlist_maker.settings.ui.view_model.SettingsViewModel
 
 
 class SettingsActivity : AppCompatActivity() {

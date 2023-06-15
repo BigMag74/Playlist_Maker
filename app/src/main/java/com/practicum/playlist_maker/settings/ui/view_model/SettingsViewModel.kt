@@ -1,12 +1,10 @@
-package com.practicum.playlist_maker.settings.view_model
+package com.practicum.playlist_maker.settings.ui.view_model
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlist_maker.creator.Creator
-import com.practicum.playlist_maker.search.ui.view_model.SearchViewModel
 import com.practicum.playlist_maker.settings.domain.SettingsInteractor
 
 
