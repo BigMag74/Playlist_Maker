@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".SearchActivity">
+    tools:context=".search.ui.activity.SearchActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
