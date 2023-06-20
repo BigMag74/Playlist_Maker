@@ -6,28 +6,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.settings.ui.view_model.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsActivity : AppCompatActivity() {
-    lateinit var backButton: ImageView
-    lateinit var shareButton: FrameLayout
-    lateinit var supportButton: FrameLayout
-    lateinit var userAgreementButton: FrameLayout
-    lateinit var themeSwitcher: SwitchMaterial
-    lateinit var viewModel: SettingsViewModel
+    private lateinit var backButton: ImageView
+    private lateinit var shareButton: FrameLayout
+    private lateinit var supportButton: FrameLayout
+    private lateinit var userAgreementButton: FrameLayout
+    private lateinit var themeSwitcher: SwitchMaterial
+
+    private val viewModel: SettingsViewModel by viewModel<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        viewModel = ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
 
         initViews()
 
@@ -62,7 +58,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initViews(){
+    private fun initViews() {
         backButton = findViewById<ImageView>(R.id.backButton)
         shareButton = findViewById<FrameLayout>(R.id.shareButton)
         supportButton = findViewById<FrameLayout>(R.id.supportButton)
