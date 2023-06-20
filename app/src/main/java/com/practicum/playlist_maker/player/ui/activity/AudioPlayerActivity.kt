@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
@@ -17,6 +16,8 @@ import com.practicum.playlist_maker.player.ui.AudioPlayerState
 import com.practicum.playlist_maker.player.ui.view_model.AudioPlayerViewModel
 import com.practicum.playlist_maker.search.ui.activity.SearchActivity
 import com.practicum.playlist_maker.utils.DateTimeUtil
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 
 class AudioPlayerActivity : AppCompatActivity() {
@@ -35,10 +36,10 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private lateinit var handler: Handler
 
-    private var url: String = ""
+    private lateinit var url: String
     private lateinit var track: Track
+    private val audioPlayerViewModel: AudioPlayerViewModel by viewModel { parametersOf(url) }
 
-    private lateinit var audioPlayerViewModel: AudioPlayerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +47,6 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         track = Gson().fromJson(intent.getStringExtra(SearchActivity.TRACK), Track::class.java)
         url = track.previewUrl
-
-        audioPlayerViewModel = ViewModelProvider(
-            this,
-            AudioPlayerViewModel.getViewModelFactory(url)
-        )[AudioPlayerViewModel::class.java]
-
 
         handler = Handler(Looper.getMainLooper())
 

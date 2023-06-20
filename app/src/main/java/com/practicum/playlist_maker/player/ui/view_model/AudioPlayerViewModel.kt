@@ -1,20 +1,15 @@
 package com.practicum.playlist_maker.player.ui.view_model
 
 import androidx.lifecycle.*
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlist_maker.creator.Creator
 import com.practicum.playlist_maker.player.domain.api.AudioPlayer
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
 
-class AudioPlayerViewModel() :
+class AudioPlayerViewModel(private val audioPlayer: AudioPlayer, private val trackUrl: String) :
     ViewModel() {
 
     private val stateLiveData = MutableLiveData<AudioPlayerState>()
     fun observeState(): LiveData<AudioPlayerState> = stateLiveData
 
-    private val audioPlayer: AudioPlayer = Creator.provideAudioPlayer()
 
     init {
         renderState(AudioPlayerState.STATE_DEFAULT)
@@ -71,16 +66,5 @@ class AudioPlayerViewModel() :
         audioPlayer.destroyPlayer()
     }
 
-
-    companion object {
-        private var trackUrl: String = ""
-
-        fun getViewModelFactory(url: String): ViewModelProvider.Factory = viewModelFactory() {
-            trackUrl = url
-            initializer {
-                AudioPlayerViewModel()
-            }
-        }
-    }
 
 }

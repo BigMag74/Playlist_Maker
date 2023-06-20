@@ -4,8 +4,7 @@ import android.media.MediaPlayer
 import com.practicum.playlist_maker.player.domain.api.AudioPlayer
 
 
-class AudioPlayerImpl : AudioPlayer {
-    private val audioPlayer = MediaPlayer()
+class AudioPlayerImpl(private val audioPlayer: MediaPlayer) : AudioPlayer {
 
     override fun preparePlayer(url: String, onPreparedListener: () -> Unit) {
         audioPlayer.setDataSource(url)
