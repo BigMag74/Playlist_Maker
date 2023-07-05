@@ -1,10 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MediaLibrary.ui.MediaLibraryActivity"
-    android:background="?attr/colorSecondary">
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical"
+    tools:context=".mediaLibrary.ui.activity.MediaLibraryActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/backButton"
+            style="@style/backButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="20dp"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            style="@style/settingsTextViewStyle"
+            android:layout_marginStart="64dp"
+            android:text="@string/media_library"
+            android:textSize="@dimen/text_size"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        app:tabIndicatorFullWidth="false"
+        style="@style/tab_layout_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

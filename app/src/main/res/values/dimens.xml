@@ -13,4 +13,6 @@
     <dimen name="hint_size">11sp</dimen>
     <dimen name="dp24">24dp</dimen>
     <dimen name="dp40">40dp</dimen>
+    <dimen name="dp46">46dp</dimen>
+    <dimen name="dp106">106dp</dimen>
 </resources>

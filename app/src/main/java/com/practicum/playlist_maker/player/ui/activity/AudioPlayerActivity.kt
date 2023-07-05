@@ -52,7 +52,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         initialize(track)
 
-        findViewById<ImageView>(R.id.backButton).setOnClickListener { onBackPressed() }
+        findViewById<ImageView>(R.id.backButton).setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         audioPlayerViewModel.observeState().observe(this) {
             render(it)

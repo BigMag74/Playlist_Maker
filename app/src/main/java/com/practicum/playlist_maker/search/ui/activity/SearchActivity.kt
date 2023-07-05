@@ -200,7 +200,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         backButton.setOnClickListener {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
 
         refreshButton.setOnClickListener {

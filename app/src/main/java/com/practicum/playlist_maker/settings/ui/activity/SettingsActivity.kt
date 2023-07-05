@@ -28,7 +28,7 @@ class SettingsActivity : AppCompatActivity() {
         initViews()
 
         backButton.setOnClickListener {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
         shareButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
