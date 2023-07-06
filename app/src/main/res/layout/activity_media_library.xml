@@ -26,16 +26,17 @@
             style="@style/settingsTextViewStyle"
             android:layout_marginStart="64dp"
             android:text="@string/media_library"
-            android:textSize="@dimen/text_size"
+            android:textSize="@dimen/text_size_big"
             android:textStyle="bold" />
     </FrameLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        app:tabIndicatorFullWidth="false"
         style="@style/tab_layout_style"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:tabIndicatorFullWidth="false"
+        app:tabTextAppearance="@style/tab_text_style" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"

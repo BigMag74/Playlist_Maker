@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="common_padding">16dp</dimen>
-    <dimen name="padding_after_icon">10dp</dimen>
-    <dimen name="text_size">22sp</dimen>
+    <dimen name="text_size_big">22sp</dimen>
     <dimen name="text_size_medium">19sp</dimen>
     <dimen name="text_size_small">16sp</dimen>
+
+    <dimen name="hint_size">11sp</dimen>
+
+    <dimen name="common_padding">16dp</dimen>
+    <dimen name="padding_after_icon">10dp</dimen>
     <dimen name="corner_radius">16dp</dimen>
     <dimen name="settings_item_size">61dp</dimen>
     <dimen name="search_padding_start">16dp</dimen>
     <dimen name="search_padding_end">24dp</dimen>
     <dimen name="search_padding_top_bot">8dp</dimen>
-    <dimen name="hint_size">11sp</dimen>
+
     <dimen name="dp24">24dp</dimen>
     <dimen name="dp40">40dp</dimen>
     <dimen name="dp46">46dp</dimen>
     <dimen name="dp106">106dp</dimen>
+    <dimen name="dp120">120dp</dimen>
 </resources>

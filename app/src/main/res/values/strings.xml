@@ -25,7 +25,7 @@
     <string name="country">Страна</string>
     <string name="time00_00" translatable="false">00:00</string>
     <string name="your_media_library_is_empty">Ваша медиатека пуста</string>
-    <string name="you_havent_created_a_single_playlist">Вы не создали ни одного плейлиста</string>
+    <string name="you_havent_created_a_single_playlist">Вы не создали\nни одного плейлиста</string>
     <string name="new_playlist">Новый плейлист</string>
     <string name="favorite_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>

@@ -26,7 +26,7 @@
             style="@style/settingsTextViewStyle"
             android:layout_marginStart="64dp"
             android:text="@string/search"
-            android:textSize="@dimen/text_size"
+            android:textSize="@dimen/text_size_big"
             android:textStyle="bold" />
     </FrameLayout>
 

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Toast
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.settings.ui.view_model.SettingsViewModel
@@ -34,7 +35,12 @@ class SettingsActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.yandex_practicum_URL))
-            startActivity(intent)
+
+            try {
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
+            }
         }
         supportButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO).apply {
@@ -43,12 +49,20 @@ class SettingsActivity : AppCompatActivity() {
                 putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
                 putExtra(Intent.EXTRA_TEXT, getString(R.string.email_text))
             }
-            startActivity(intent)
+            try {
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+            }
         }
         userAgreementButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(getString(R.string.user_agreement_URL))
-            startActivity(intent)
+            try {
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+            }
         }
 
         themeSwitcher.isChecked = viewModel.isDarkTheme

@@ -2,7 +2,6 @@ package com.practicum.playlist_maker.mediaLibrary.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.OnBackPressedDispatcher
 import com.google.android.material.tabs.TabLayoutMediator
 import com.practicum.playlist_maker.mediaLibrary.ui.MediaLibraryViewPagerAdapter
 import com.practicum.playlist_maker.R
