@@ -1,7 +1,7 @@
 package com.practicum.playlist_maker
 
 import android.app.Application
-import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlist_maker.mediaLibrary.di.mediaLibraryModule
 import com.practicum.playlist_maker.player.di.audioPlayerModule
 import com.practicum.playlist_maker.player.di.audioPlayerViewModelModule
 import com.practicum.playlist_maker.search.di.searchDataModule
@@ -35,6 +35,7 @@ class App : Application() {
                 settingsInteractorModule,
                 settingsRepositoryModule,
                 settingsViewModelModule,
+                mediaLibraryModule,
             )
 
         }

@@ -105,11 +105,10 @@ class SearchActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE && editTextText.isNotEmpty()) {
                 viewModel.searchDebounce(editTextText)
                 recyclerView.visibility = View.VISIBLE
-                true
             }
             false
         }
-        searchEditText.setOnFocusChangeListener { view, hasFocus ->
+        searchEditText.setOnFocusChangeListener { _, hasFocus ->
             historyLayout.visibility =
                 if (hasFocus && editTextText.isEmpty() && viewModel.getTracksFromSearchHistory()
                         .isNotEmpty()
@@ -200,7 +199,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         backButton.setOnClickListener {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
 
         refreshButton.setOnClickListener {

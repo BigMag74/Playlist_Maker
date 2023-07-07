@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Button
-import com.practicum.playlist_maker.MediaLibrary.ui.MediaLibraryActivity
+import com.practicum.playlist_maker.mediaLibrary.ui.activity.MediaLibraryActivity
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.search.ui.activity.SearchActivity
 import com.practicum.playlist_maker.settings.ui.activity.SettingsActivity

@@ -24,4 +24,13 @@
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
     <string name="time00_00" translatable="false">00:00</string>
+    <string name="your_media_library_is_empty">Ваша медиатека пуста</string>
+    <string name="you_havent_created_a_single_playlist">Вы не создали\nни одного плейлиста</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="favorite_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="there_is_no_app_on_the_device_to_make_this_request">На устройстве нет приложения для выполнения этого запроса</string>
+    <string name="there_is_no_app_on_the_device_to_send_email">На устройстве нет приложения для отправки почты</string>
+    <string name="there_is_no_browser_on_the_device">На устройстве отсутствует браузер</string>
+
 </resources>

@@ -24,4 +24,13 @@
     <string name="year">Year</string>
     <string name="genre">Genre</string>
     <string name="country">Country</string>
+    <string name="your_media_library_is_empty">Your media library is empty</string>
+    <string name="you_havent_created_a_single_playlist">You haven\'t created a single playlist</string>
+    <string name="new_playlist">New playlist</string>
+    <string name="favorite_tracks">Favorite tracks</string>
+    <string name="playlists">Playlists</string>
+    <string name="there_is_no_app_on_the_device_to_make_this_request">There is no app on the device to make this request</string>
+    <string name="there_is_no_app_on_the_device_to_send_email">There is no app on the device to send email</string>
+    <string name="there_is_no_browser_on_the_device">There is no browser on the device</string>
+
 </resources>
