@@ -5,23 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.practicum.playlist_maker.mediaLibrary.ui.MediaLibraryViewPagerAdapter
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.databinding.FragmentMediaLibraryBinding
-import com.practicum.playlist_maker.main.ui.MainFragment
 
 class MediaLibraryFragment : Fragment() {
 
     private lateinit var binding: FragmentMediaLibraryBinding
     private lateinit var tabMediator: TabLayoutMediator
 
-    companion object {
-        fun newInstance() = MediaLibraryFragment()
-        const val TAG = "MediaLibraryFragment"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,10 +28,6 @@ class MediaLibraryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.backButton.setOnClickListener {
-            findNavController().navigateUp()
-        }
 
         binding.viewPager.adapter = MediaLibraryViewPagerAdapter(childFragmentManager, lifecycle)
 

@@ -99,4 +99,10 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
+    <style name="bottomNavigationViewStyle">
+        <item name="android:background">@color/black</item>
+        <item name="itemIconTint">@color/white</item>
+        <item name="itemTextColor">@color/white</item>
+    </style>
+
 </resources>

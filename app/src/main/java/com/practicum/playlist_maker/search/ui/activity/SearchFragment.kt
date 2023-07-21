@@ -20,13 +20,11 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.practicum.playlist_maker.*
 import com.practicum.playlist_maker.databinding.FragmentSearchBinding
-import com.practicum.playlist_maker.main.ui.MainFragment
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.player.ui.activity.AudioPlayerActivity
 import com.practicum.playlist_maker.search.ui.SearchHistoryAdapter
@@ -41,7 +39,6 @@ class SearchFragment : Fragment() {
 
     private lateinit var searchEditText: EditText
     private lateinit var crossButton: ImageView
-    private lateinit var backButton: ImageView
     private lateinit var recyclerView: RecyclerView
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var placeholderMessage: TextView
@@ -130,7 +127,6 @@ class SearchFragment : Fragment() {
     private fun initViews() {
         searchEditText = binding.searchEditText
         crossButton = binding.crossButton
-        backButton = binding.backButton
         recyclerView = binding.searchRecyclerView
         historyRecyclerView = binding.historyRecyclerView
         placeholderMessage = binding.placeholderMessage
@@ -217,9 +213,7 @@ class SearchFragment : Fragment() {
 
         }
 
-        backButton.setOnClickListener {
-            findNavController().navigateUp()
-        }
+
 
         refreshButton.setOnClickListener {
             refreshButton.visibility = View.GONE

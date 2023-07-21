@@ -10,19 +10,16 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.databinding.FragmentSettingsBinding
-import com.practicum.playlist_maker.main.ui.MainFragment
 import com.practicum.playlist_maker.settings.ui.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsFragment : Fragment() {
 
-    private lateinit var backButton: ImageView
     private lateinit var shareButton: FrameLayout
     private lateinit var supportButton: FrameLayout
     private lateinit var userAgreementButton: FrameLayout
@@ -42,9 +39,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        backButton.setOnClickListener {
-            findNavController().navigateUp()
-        }
+
 
         shareButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
@@ -81,7 +76,6 @@ class SettingsFragment : Fragment() {
 
 
     private fun initViews() {
-        backButton = binding.backButton
         shareButton = binding.shareButton
         supportButton = binding.supportButton
         userAgreementButton = binding.userAgreementButton
