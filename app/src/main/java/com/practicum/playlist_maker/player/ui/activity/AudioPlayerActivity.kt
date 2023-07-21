@@ -14,7 +14,7 @@ import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
 import com.practicum.playlist_maker.player.ui.view_model.AudioPlayerViewModel
-import com.practicum.playlist_maker.search.ui.activity.SearchActivity
+import com.practicum.playlist_maker.search.ui.activity.SearchFragment
 import com.practicum.playlist_maker.utils.DateTimeUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -45,7 +45,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player)
 
-        track = Gson().fromJson(intent.getStringExtra(SearchActivity.TRACK), Track::class.java)
+        track = Gson().fromJson(intent.getStringExtra(SearchFragment.TRACK), Track::class.java)
         url = track.previewUrl
 
         handler = Handler(Looper.getMainLooper())

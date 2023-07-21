@@ -2,18 +2,25 @@ package com.practicum.playlist_maker.settings.ui.activity
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlist_maker.R
+import com.practicum.playlist_maker.databinding.FragmentSettingsBinding
+import com.practicum.playlist_maker.main.ui.MainFragment
 import com.practicum.playlist_maker.settings.ui.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
+
     private lateinit var backButton: ImageView
     private lateinit var shareButton: FrameLayout
     private lateinit var supportButton: FrameLayout
@@ -22,15 +29,28 @@ class SettingsActivity : AppCompatActivity() {
 
     private val viewModel: SettingsViewModel by viewModel<SettingsViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+    private lateinit var binding: FragmentSettingsBinding
 
+    companion object {
+        fun newInstance() = SettingsFragment()
+        const val TAG = "SettingsFragment"
+    }
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initViews()
-
         backButton.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            parentFragmentManager.commit {
+                replace(R.id.rootFragmentContainerView,MainFragment.newInstance())
+                }
         }
+
         shareButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
@@ -38,6 +58,7 @@ class SettingsActivity : AppCompatActivity() {
 
             startActivityOrShowErrorMessage(intent,getString(R.string.there_is_no_app_on_the_device_to_make_this_request))
         }
+
         supportButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:")
@@ -60,14 +81,16 @@ class SettingsActivity : AppCompatActivity() {
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             viewModel.switchTheme(checked)
         }
+
     }
 
+
     private fun initViews() {
-        backButton = findViewById<ImageView>(R.id.backButton)
-        shareButton = findViewById<FrameLayout>(R.id.shareButton)
-        supportButton = findViewById<FrameLayout>(R.id.supportButton)
-        userAgreementButton = findViewById<FrameLayout>(R.id.userAgreementButton)
-        themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        backButton = binding.backButton
+        shareButton = binding.shareButton
+        supportButton = binding.supportButton
+        userAgreementButton = binding.userAgreementButton
+        themeSwitcher = binding.themeSwitcher
     }
 
     private fun startActivityOrShowErrorMessage(intent: Intent, message: String) {
@@ -75,7 +98,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
         catch (e:Exception){
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         }
 
     }
