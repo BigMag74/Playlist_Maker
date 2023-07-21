@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.databinding.FragmentSettingsBinding
@@ -31,10 +32,6 @@ class SettingsFragment : Fragment() {
 
     private lateinit var binding: FragmentSettingsBinding
 
-    companion object {
-        fun newInstance() = SettingsFragment()
-        const val TAG = "SettingsFragment"
-    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,9 +43,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews()
         backButton.setOnClickListener {
-            parentFragmentManager.commit {
-                replace(R.id.rootFragmentContainerView,MainFragment.newInstance())
-                }
+            findNavController().navigateUp()
         }
 
         shareButton.setOnClickListener {

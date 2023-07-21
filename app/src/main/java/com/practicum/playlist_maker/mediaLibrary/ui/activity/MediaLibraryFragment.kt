@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.practicum.playlist_maker.mediaLibrary.ui.MediaLibraryViewPagerAdapter
 import com.practicum.playlist_maker.R
@@ -35,9 +36,7 @@ class MediaLibraryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.backButton.setOnClickListener {
-            parentFragmentManager.commit {
-                replace(R.id.rootFragmentContainerView, MainFragment.newInstance())
-            }
+            findNavController().navigateUp()
         }
 
         binding.viewPager.adapter = MediaLibraryViewPagerAdapter(childFragmentManager, lifecycle)

@@ -21,6 +21,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.practicum.playlist_maker.*
@@ -217,9 +218,7 @@ class SearchFragment : Fragment() {
         }
 
         backButton.setOnClickListener {
-            parentFragmentManager.commit {
-                replace(R.id.rootFragmentContainerView, MainFragment.newInstance())
-            }
+            findNavController().navigateUp()
         }
 
         refreshButton.setOnClickListener {
