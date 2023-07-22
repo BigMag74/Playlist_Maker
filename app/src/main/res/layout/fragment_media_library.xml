@@ -8,18 +8,15 @@
     android:orientation="vertical"
     tools:context=".mediaLibrary.ui.activity.MediaLibraryFragment">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
+    <TextView
+        style="@style/headerTextViewStyle"
+        android:layout_marginStart="@dimen/common_padding"
+        android:layout_marginTop="@dimen/common_padding"
+        android:text="@string/media_library"
+        android:textSize="@dimen/text_size_big"
+        android:textStyle="bold" />
 
-        <TextView
-            style="@style/settingsTextViewStyle"
-            android:layout_marginStart="@dimen/common_padding"
-            android:text="@string/media_library"
-            android:textSize="@dimen/text_size_big"
-            android:textStyle="bold" />
-    </FrameLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

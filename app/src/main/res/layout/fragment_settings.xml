@@ -2,24 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".settings.ui.activity.SettingsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
-    android:orientation="vertical">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    android:orientation="vertical"
+    tools:context=".settings.ui.activity.SettingsFragment">
 
 
-        <TextView
-            style="@style/settingsTextViewStyle"
-            android:layout_marginStart="@dimen/common_padding"
-            android:text="@string/settings"
-            android:textSize="@dimen/text_size_big"
-            android:textStyle="bold" />
-    </FrameLayout>
+    <TextView
+        style="@style/headerTextViewStyle"
+        android:layout_marginStart="@dimen/common_padding"
+        android:layout_marginTop="@dimen/common_padding"
+        android:text="@string/settings"
+        android:textSize="@dimen/text_size_big"
+        android:textStyle="bold" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -28,7 +24,7 @@
         android:layout_marginTop="24dp">
 
         <TextView
-            style="@style/settingsTextViewStyle"
+            style="@style/headerTextViewStyle"
             android:text="@string/dark_theme" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -45,7 +41,7 @@
         android:layout_height="@dimen/settings_item_size">
 
         <TextView
-            style="@style/settingsTextViewStyle"
+            style="@style/headerTextViewStyle"
             android:text="@string/share_app" />
 
         <ImageView
@@ -63,7 +59,7 @@
         android:layout_height="@dimen/settings_item_size">
 
         <TextView
-            style="@style/settingsTextViewStyle"
+            style="@style/headerTextViewStyle"
             android:text="@string/write_to_support" />
 
         <ImageView
@@ -81,7 +77,7 @@
         android:layout_height="@dimen/settings_item_size">
 
         <TextView
-            style="@style/settingsTextViewStyle"
+            style="@style/headerTextViewStyle"
             android:text="@string/user_agreement" />
 
         <ImageView

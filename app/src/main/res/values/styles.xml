@@ -17,14 +17,14 @@
 
     </style>
 
-    <style name="settingsTextViewStyle">
+    <style name="headerTextViewStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginStart">@dimen/common_padding</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
     </style>
 
     <style name="settingsIcons">

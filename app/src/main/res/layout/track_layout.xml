@@ -27,7 +27,7 @@
 
             <TextView
                 android:id="@+id/trackTitle"
-                style="@style/settingsTextViewStyle"
+                style="@style/headerTextViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/search_padding_top_bot"
@@ -44,7 +44,7 @@
 
                 <TextView
                     android:id="@+id/trackArtist"
-                    style="@style/settingsTextViewStyle"
+                    style="@style/headerTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/search_padding_top_bot"
@@ -64,7 +64,7 @@
 
                 <TextView
                     android:id="@+id/trackTime"
-                    style="@style/settingsTextViewStyle"
+                    style="@style/headerTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/search_padding_top_bot"
