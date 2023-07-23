@@ -6,29 +6,16 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".search.ui.activity.SearchActivity">
+    tools:context=".search.ui.activity.SearchFragment">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/backButton"
-            style="@style/backButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="20dp"
-            android:src="@drawable/back_icon" />
-
-        <TextView
-            style="@style/settingsTextViewStyle"
-            android:layout_marginStart="64dp"
-            android:text="@string/search"
-            android:textSize="@dimen/text_size_big"
-            android:textStyle="bold" />
-    </FrameLayout>
+    <TextView
+        style="@style/headerTextViewStyle"
+        android:layout_marginStart="@dimen/common_padding"
+        android:layout_marginTop="@dimen/common_padding"
+        android:text="@string/search"
+        android:textSize="@dimen/text_size_big"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -95,7 +82,7 @@
             android:visibility="visible">
 
             <TextView
-                style="@style/settingsTextViewStyle"
+                style="@style/headerTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"

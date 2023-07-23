@@ -54,7 +54,7 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
                     }
 
                     when {
-                        message == "Internet error" -> {
+                        message == INTERNET_ERROR -> {
                             latestSearchText = ""
                             renderState(
                                 SearchState.Error(
@@ -63,7 +63,7 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
                             )
                         }
 
-                        message == "Server error" -> {
+                        message == SERVER_ERROR -> {
                             latestSearchText = ""
                             renderState(
                                 SearchState.Error(
@@ -117,5 +117,7 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
+        private const val SERVER_ERROR = "Server error"
+        private const val INTERNET_ERROR = "Internet error"
     }
 }
