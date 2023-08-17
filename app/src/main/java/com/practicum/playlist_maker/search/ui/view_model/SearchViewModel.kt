@@ -1,17 +1,14 @@
 package com.practicum.playlist_maker.search.ui.view_model
 
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.*
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.search.domain.api.TracksInteractor
 import com.practicum.playlist_maker.search.ui.SearchState
+import com.practicum.playlist_maker.utils.debounce
 
 class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewModel() {
 
-    private val handler = Handler(Looper.getMainLooper())
 
     private val stateLiveData = MutableLiveData<SearchState>()
     fun observeState(): LiveData<SearchState> = stateLiveData
@@ -23,24 +20,17 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
 
     private var latestSearchText: String? = null
 
-
-    fun searchDebounce(changedText: String) {
-        if (latestSearchText == changedText) {
-            return
-        }
-
-        this.latestSearchText = changedText
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        val searchRunnable = Runnable { searchRequest(changedText) }
-
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime,
-        )
-
+    private val tracksSearchDebounce = debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true){
+        changedText -> searchRequest(changedText)
     }
+
+    fun searchDebounce(changedText: String){
+        if(latestSearchText != changedText){
+            latestSearchText = changedText
+            tracksSearchDebounce(changedText)
+        }
+    }
+
 
     private fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
@@ -94,9 +84,7 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
         }
     }
 
-    fun removeAllCallbacks() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-    }
+
 
     fun addTrackToSearchHistory(track: Track) {
         tracksInteractor.addTrackToSearchHistory(track)
@@ -110,9 +98,6 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
         tracksInteractor.clearSearchHistory()
     }
 
-    override fun onCleared() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-    }
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
