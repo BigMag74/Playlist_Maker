@@ -6,6 +6,7 @@ import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.search.domain.api.TracksInteractor
 import com.practicum.playlist_maker.search.ui.SearchState
 import com.practicum.playlist_maker.utils.debounce
+import kotlinx.coroutines.launch
 
 class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewModel() {
 
@@ -20,12 +21,13 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
 
     private var latestSearchText: String? = null
 
-    private val tracksSearchDebounce = debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true){
-        changedText -> searchRequest(changedText)
-    }
+    private val tracksSearchDebounce =
+        debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) { changedText ->
+            searchRequest(changedText)
+        }
 
-    fun searchDebounce(changedText: String){
-        if(latestSearchText != changedText){
+    fun searchDebounce(changedText: String) {
+        if (latestSearchText != changedText) {
             latestSearchText = changedText
             tracksSearchDebounce(changedText)
         }
@@ -36,54 +38,57 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
         if (newSearchText.isNotEmpty()) {
             renderState(SearchState.Loading)
 
-            tracksInteractor.searchTracks(newSearchText, object : TracksInteractor.TracksConsumer {
-                override fun consume(foundTracks: List<Track>?, message: String?) {
-                    val tracks = mutableListOf<Track>()
-                    if (foundTracks != null) {
-                        tracks.addAll(foundTracks)
-                    }
-
-                    when {
-                        message == INTERNET_ERROR -> {
-                            latestSearchText = ""
-                            renderState(
-                                SearchState.Error(
-                                    R.string.internet_issues
-                                )
-                            )
-                        }
-
-                        message == SERVER_ERROR -> {
-                            latestSearchText = ""
-                            renderState(
-                                SearchState.Error(
-                                    R.string.server_issues
-                                )
-                            )
-                        }
-
-                        tracks.isEmpty() -> {
-                            renderState(
-                                SearchState.Empty(
-                                    R.string.nothing_found
-                                )
-                            )
-                        }
-
-                        else -> {
-                            renderState(
-                                SearchState.Content(
-                                    tracks,
-                                )
-                            )
-                        }
-                    }
-
+            viewModelScope.launch {
+                tracksInteractor.searchTracks(newSearchText).collect { pair ->
+                    processResult(pair.first, pair.second)
                 }
-            })
+            }
         }
     }
 
+    private fun processResult(foundTracks: List<Track>?, message: String?) {
+        val tracks = mutableListOf<Track>()
+
+        if (foundTracks != null) {
+            tracks.addAll(foundTracks)
+        }
+
+        when {
+            message == INTERNET_ERROR -> {
+                latestSearchText = ""
+                renderState(
+                    SearchState.Error(
+                        R.string.internet_issues
+                    )
+                )
+            }
+
+            message == SERVER_ERROR -> {
+                latestSearchText = ""
+                renderState(
+                    SearchState.Error(
+                        R.string.server_issues
+                    )
+                )
+            }
+
+            tracks.isEmpty() -> {
+                renderState(
+                    SearchState.Empty(
+                        R.string.nothing_found
+                    )
+                )
+            }
+
+            else -> {
+                renderState(
+                    SearchState.Content(
+                        tracks,
+                    )
+                )
+            }
+        }
+    }
 
 
     fun addTrackToSearchHistory(track: Track) {
