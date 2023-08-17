@@ -1,14 +1,16 @@
 package com.practicum.playlist_maker.player.ui
 
-import com.practicum.playlist_maker.player.domain.model.Track
-import com.practicum.playlist_maker.search.ui.SearchState
 
-sealed interface AudioPlayerState {
-    object STATE_DEFAULT : AudioPlayerState
-    object STATE_PREPARED : AudioPlayerState
-    data class STATE_PLAYING(
-        val time: Int,
-    ) : AudioPlayerState
+sealed class AudioPlayerState(
+    val isPlayButtonEnabled: Boolean,
+    val progress: String
+) {
 
-    object STATE_PAUSED : AudioPlayerState
+    class Default : AudioPlayerState(false, "00:00")
+
+    class Prepared : AudioPlayerState(true, "00:00")
+
+    class Playing(progress: String) : AudioPlayerState(true, progress)
+
+    class Paused(progress: String) : AudioPlayerState(true, progress)
 }

@@ -3,6 +3,7 @@ package com.practicum.playlist_maker.player.ui.activity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -34,7 +35,6 @@ class AudioPlayerActivity : AppCompatActivity() {
     lateinit var country: TextView
     lateinit var playButton: ImageView
 
-    private lateinit var handler: Handler
 
     private lateinit var url: String
     private lateinit var track: Track
@@ -48,7 +48,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         track = Gson().fromJson(intent.getStringExtra(SearchFragment.TRACK), Track::class.java)
         url = track.previewUrl
 
-        handler = Handler(Looper.getMainLooper())
 
         initialize(track)
 
@@ -59,10 +58,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
-    }
 
     private fun initialize(track: Track) {
         trackIcon = findViewById(R.id.trackIcon)
@@ -122,33 +117,15 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
 
-    private fun updateTime(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                playTime.text = DateTimeUtil.msecToMMSS(audioPlayerViewModel.getCurrentPosition())
-                handler.postDelayed(this, 400L)
-            }
-
-        }
-    }
-
     private fun render(state: AudioPlayerState) {
+        playButton.isEnabled = state.isPlayButtonEnabled
+        playTime.text = state.progress
         when (state) {
-            is AudioPlayerState.STATE_DEFAULT -> {
-                playButton.isEnabled = false
-            }
-            is AudioPlayerState.STATE_PREPARED -> {
-                handler.removeCallbacksAndMessages(null)
-                playTime.text = getString(R.string.time00_00)
+            is AudioPlayerState.Default, is AudioPlayerState.Prepared, is AudioPlayerState.Paused -> {
                 changePlayButtonImageToPlay()
-                activatePlayButton()
             }
-            is AudioPlayerState.STATE_PLAYING -> {
+            is AudioPlayerState.Playing -> {
                 changePlayButtonImageToPause()
-                updateHandler()
-            }
-            is AudioPlayerState.STATE_PAUSED -> {
-                changePlayButtonImageToPlay()
             }
         }
     }
@@ -162,13 +139,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         playButton.setImageResource(R.drawable.pause_button)
     }
 
-    private fun activatePlayButton() {
-        playButton.isEnabled = true
-    }
-
-    private fun updateHandler() {
-        handler.post(updateTime())
-    }
 
     companion object {
         private const val SINGLE = "Single"

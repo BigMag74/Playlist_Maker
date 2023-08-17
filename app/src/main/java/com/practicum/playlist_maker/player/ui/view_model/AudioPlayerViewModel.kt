@@ -3,6 +3,11 @@ package com.practicum.playlist_maker.player.ui.view_model
 import androidx.lifecycle.*
 import com.practicum.playlist_maker.player.domain.api.AudioPlayer
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AudioPlayerViewModel(private val audioPlayer: AudioPlayer, private val trackUrl: String) :
     ViewModel() {
@@ -10,47 +15,63 @@ class AudioPlayerViewModel(private val audioPlayer: AudioPlayer, private val tra
     private val stateLiveData = MutableLiveData<AudioPlayerState>()
     fun observeState(): LiveData<AudioPlayerState> = stateLiveData
 
+    private var timerJob: Job? = null
+
 
     init {
-        renderState(AudioPlayerState.STATE_DEFAULT)
+        renderState(AudioPlayerState.Default())
         prepareAudioPlayer()
         setOnCompleteListener()
     }
 
     private fun prepareAudioPlayer() {
         audioPlayer.preparePlayer(url = trackUrl) {
-            renderState(AudioPlayerState.STATE_PREPARED)
+            renderState(AudioPlayerState.Prepared())
         }
     }
 
 
     private fun startAudioPlayer() {
         audioPlayer.startPlayer()
-        renderState(AudioPlayerState.STATE_PLAYING(audioPlayer.getCurrentPosition()))
+        renderState(AudioPlayerState.Playing(getCurrentPosition()))
+        startTimer()
     }
 
     private fun pauseAudioPlayer() {
         audioPlayer.pausePlayer()
-        renderState(AudioPlayerState.STATE_PAUSED)
+        timerJob?.cancel()
+        renderState(AudioPlayerState.Paused(getCurrentPosition()))
     }
 
+    private fun startTimer() {
+        timerJob = viewModelScope.launch {
+            while (audioPlayer.isPlaying()) {
+                delay(300L)
+                renderState(AudioPlayerState.Playing(getCurrentPosition()))
+            }
+        }
+    }
 
-    fun getCurrentPosition(): Int {
-        return audioPlayer.getCurrentPosition()
+    private fun getCurrentPosition(): String {
+        return SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(audioPlayer.getCurrentPosition()) ?: "00:00"
     }
 
     private fun setOnCompleteListener() {
         audioPlayer.setOnCompletionListener {
-            renderState(AudioPlayerState.STATE_PREPARED)
+            renderState(AudioPlayerState.Prepared())
+            timerJob?.cancel()
         }
     }
 
     fun playbackControl() {
         when (stateLiveData.value) {
-            is AudioPlayerState.STATE_PLAYING -> {
+            is AudioPlayerState.Playing -> {
                 pauseAudioPlayer()
             }
-            is AudioPlayerState.STATE_PREPARED, AudioPlayerState.STATE_PAUSED -> {
+            is AudioPlayerState.Prepared, is AudioPlayerState.Paused -> {
                 startAudioPlayer()
             }
             else -> {}
