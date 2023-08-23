@@ -281,7 +281,7 @@ class SearchFragment : Fragment() {
         if (isClickAllowed) {
             isClickAllowed = false
             viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
                 isClickAllowed = true
             }
         }
@@ -291,7 +291,7 @@ class SearchFragment : Fragment() {
     companion object {
         const val TRACK = "TRACK"
 
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
 
         fun newInstance() = SearchFragment()
         const val TAG = "SearchFragment"

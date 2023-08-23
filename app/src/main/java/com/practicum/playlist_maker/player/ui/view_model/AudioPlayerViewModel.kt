@@ -12,47 +12,47 @@ import java.util.*
 class AudioPlayerViewModel(private val audioPlayer: AudioPlayer, private val trackUrl: String) :
     ViewModel() {
 
-    private val stateLiveData = MutableLiveData<AudioPlayerState>()
-    fun observeState(): LiveData<AudioPlayerState> = stateLiveData
+    private val _state = MutableLiveData<AudioPlayerState>()
+    val state: LiveData<AudioPlayerState> = _state
 
     private var timerJob: Job? = null
 
 
     init {
-        renderState(AudioPlayerState.Default())
+        setState(AudioPlayerState.Default())
         prepareAudioPlayer()
         setOnCompleteListener()
     }
 
     private fun prepareAudioPlayer() {
         audioPlayer.preparePlayer(url = trackUrl) {
-            renderState(AudioPlayerState.Prepared())
+            setState(AudioPlayerState.Prepared())
         }
     }
 
 
     private fun startAudioPlayer() {
         audioPlayer.startPlayer()
-        renderState(AudioPlayerState.Playing(getCurrentPosition()))
+        setState(AudioPlayerState.Playing(getCurrentTrackTimePosition()))
         startTimer()
     }
 
     private fun pauseAudioPlayer() {
         audioPlayer.pausePlayer()
         timerJob?.cancel()
-        renderState(AudioPlayerState.Paused(getCurrentPosition()))
+        setState(AudioPlayerState.Paused(getCurrentTrackTimePosition()))
     }
 
     private fun startTimer() {
         timerJob = viewModelScope.launch {
             while (audioPlayer.isPlaying()) {
-                delay(300L)
-                renderState(AudioPlayerState.Playing(getCurrentPosition()))
+                delay(UPDATE_DELAY_MILLIS)
+                setState(AudioPlayerState.Playing(getCurrentTrackTimePosition()))
             }
         }
     }
 
-    private fun getCurrentPosition(): String {
+    private fun getCurrentTrackTimePosition(): String {
         return SimpleDateFormat(
             "mm:ss",
             Locale.getDefault()
@@ -61,13 +61,13 @@ class AudioPlayerViewModel(private val audioPlayer: AudioPlayer, private val tra
 
     private fun setOnCompleteListener() {
         audioPlayer.setOnCompletionListener {
-            renderState(AudioPlayerState.Prepared())
+            setState(AudioPlayerState.Prepared())
             timerJob?.cancel()
         }
     }
 
     fun playbackControl() {
-        when (stateLiveData.value) {
+        when (_state.value) {
             is AudioPlayerState.Playing -> {
                 pauseAudioPlayer()
             }
@@ -78,13 +78,17 @@ class AudioPlayerViewModel(private val audioPlayer: AudioPlayer, private val tra
         }
     }
 
-    private fun renderState(state: AudioPlayerState) {
-        stateLiveData.postValue(state)
+    private fun setState(state: AudioPlayerState) {
+        _state.postValue(state)
     }
 
 
     override fun onCleared() {
         audioPlayer.destroyPlayer()
+    }
+
+    companion object {
+        const val UPDATE_DELAY_MILLIS = 300L
     }
 
 
