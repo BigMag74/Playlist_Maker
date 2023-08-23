@@ -34,4 +34,8 @@ class AudioPlayerImpl(private val audioPlayer: MediaPlayer) : AudioPlayer {
         audioPlayer.release()
     }
 
+    override fun isPlaying(): Boolean {
+        return audioPlayer.isPlaying
+    }
+
 }

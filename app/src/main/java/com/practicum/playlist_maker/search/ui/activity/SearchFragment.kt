@@ -20,6 +20,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -32,6 +33,8 @@ import com.practicum.playlist_maker.search.ui.SearchState
 import com.practicum.playlist_maker.search.ui.TrackAdapter
 import com.practicum.playlist_maker.search.ui.TracksClickListener
 import com.practicum.playlist_maker.search.ui.view_model.SearchViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -246,9 +249,6 @@ class SearchFragment : Fragment() {
                 else
                     historyLayout.visibility = View.GONE
 
-                viewModel.removeAllCallbacks()
-
-
                 recyclerView.visibility = View.GONE
                 placeholderMessage.visibility = View.GONE
                 placeholderImage.visibility = View.GONE
@@ -280,7 +280,10 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
+                isClickAllowed = true
+            }
         }
         return current
     }
@@ -288,7 +291,7 @@ class SearchFragment : Fragment() {
     companion object {
         const val TRACK = "TRACK"
 
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
 
         fun newInstance() = SearchFragment()
         const val TAG = "SearchFragment"
