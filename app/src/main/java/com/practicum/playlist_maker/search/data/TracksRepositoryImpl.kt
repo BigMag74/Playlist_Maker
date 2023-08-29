@@ -1,5 +1,6 @@
 package com.practicum.playlist_maker.search.data
 
+import com.practicum.playlist_maker.player.data.db.AppDatabase
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.search.data.dto.TracksSearchRequest
 import com.practicum.playlist_maker.search.data.dto.TracksSearchResponse
@@ -22,8 +23,8 @@ class TracksRepositoryImpl(
         }
     }
 
-    override fun getTracksFromSearchHistory(): ArrayList<Track> {
-        return localStorage.getTracks().toCollection(ArrayList())
+    override suspend fun getTracksFromSearchHistory(): Flow<ArrayList<Track>> = flow {
+        emit(localStorage.getTracks().toCollection(ArrayList()))
     }
 
     override fun addTrackToSearchHistory(track: Track) {

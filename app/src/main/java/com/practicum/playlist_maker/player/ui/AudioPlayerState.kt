@@ -3,14 +3,15 @@ package com.practicum.playlist_maker.player.ui
 
 sealed class AudioPlayerState(
     val isPlayButtonEnabled: Boolean,
-    val progress: String
+    val progress: String,
+    var isFavorite: Boolean,
 ) {
 
-    class Default : AudioPlayerState(false, "00:00")
+    class Default(isFavorite: Boolean) : AudioPlayerState(false, "00:00", isFavorite)
 
-    class Prepared : AudioPlayerState(true, "00:00")
+    class Prepared(isFavorite: Boolean) : AudioPlayerState(true, "00:00", isFavorite)
 
-    class Playing(progress: String) : AudioPlayerState(true, progress)
+    class Playing(progress: String, isFavorite: Boolean) : AudioPlayerState(true, progress, isFavorite)
 
-    class Paused(progress: String) : AudioPlayerState(true, progress)
+    class Paused(progress: String, isFavorite: Boolean) : AudioPlayerState(true, progress,isFavorite)
 }

@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +22,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.practicum.playlist_maker.*
@@ -69,7 +69,7 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -87,7 +87,6 @@ class SearchFragment : Fragment() {
                     startActivity(intent)
 
                     viewModel.addTrackToSearchHistory(track)
-                    searchHistoryAdapter.tracks = viewModel.getTracksFromSearchHistory()
                 }
             }
 
@@ -98,11 +97,6 @@ class SearchFragment : Fragment() {
 
         searchHistoryAdapter = SearchHistoryAdapter(onClickListener)
 
-
-        searchHistoryAdapter.tracks = viewModel.getTracksFromSearchHistory()
-        historyRecyclerView.adapter = searchHistoryAdapter
-        if (viewModel.getTracksFromSearchHistory().isEmpty()) historyLayout.visibility = View.GONE
-
         searchEditText.addTextChangedListener(searchButtonTextWatcher)
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE && editTextText.isNotEmpty()) {
@@ -111,11 +105,10 @@ class SearchFragment : Fragment() {
             }
             false
         }
+
         searchEditText.setOnFocusChangeListener { _, hasFocus ->
-            historyLayout.visibility =
-                if (hasFocus && editTextText.isEmpty() && viewModel.getTracksFromSearchHistory()
-                        .isNotEmpty()
-                ) View.VISIBLE else View.GONE
+            if (hasFocus && editTextText.isEmpty())
+                viewModel.showHistory()
         }
 
         setOnClickListeners()
@@ -126,6 +119,8 @@ class SearchFragment : Fragment() {
             render(it)
         }
     }
+
+
 
     private fun initViews() {
         searchEditText = binding.searchEditText
@@ -147,8 +142,10 @@ class SearchFragment : Fragment() {
             is SearchState.Empty -> showEmpty(state.emptyMessageResId)
             is SearchState.Error -> showError(state.errorMessageResId)
             is SearchState.Loading -> showLoading()
+            is SearchState.SearchHistory -> showSearchHistory(state.tracks)
         }
     }
+
 
     private fun showContent(tracks: List<Track>) {
         progressBar.visibility = View.GONE
@@ -197,10 +194,16 @@ class SearchFragment : Fragment() {
         refreshButton.visibility = View.GONE
     }
 
-    override fun onStart() {
-        super.onStart()
-        searchHistoryAdapter.notifyDataSetChanged()
+    private fun showSearchHistory(tracks: List<Track>?) {
+        if (tracks.isNullOrEmpty()) {
+            historyLayout.visibility = View.GONE
+        } else {
+            historyLayout.visibility = View.VISIBLE
+            searchHistoryAdapter.tracks = tracks as ArrayList<Track>
+            historyRecyclerView.adapter = searchHistoryAdapter
+        }
     }
+
 
     private fun setOnClickListeners() {
         crossButton.setOnClickListener {
@@ -213,10 +216,9 @@ class SearchFragment : Fragment() {
             val inputMethod =
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethod.hideSoftInputFromWindow(requireActivity().window.decorView.windowToken, 0)
+            viewModel.showHistory()
 
         }
-
-
 
         refreshButton.setOnClickListener {
             refreshButton.visibility = View.GONE
@@ -238,16 +240,12 @@ class SearchFragment : Fragment() {
             start: Int,
             count: Int,
             after: Int
-        ) {
-        }
+        ) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
             if (searchEditText.hasFocus() && s?.isEmpty() == true) {
-                if (viewModel.getTracksFromSearchHistory().isNotEmpty())
-                    historyLayout.visibility = View.VISIBLE
-                else
-                    historyLayout.visibility = View.GONE
+                viewModel.showHistory()
 
                 recyclerView.visibility = View.GONE
                 placeholderMessage.visibility = View.GONE
@@ -256,9 +254,8 @@ class SearchFragment : Fragment() {
             } else {
                 historyLayout.visibility = View.GONE
                 editTextText = s.toString()
-                viewModel.searchDebounce(s?.toString() ?: "")
             }
-
+            viewModel.searchDebounce(s?.toString() ?: "")
             crossButton.visibility = clearButtonVisibility(s)
         }
 

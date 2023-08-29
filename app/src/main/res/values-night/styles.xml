@@ -80,6 +80,10 @@
         <item name="backgroundTint">@color/dark_gray</item>
     </style>
 
+    <style name="like_button_style">
+        <item name="backgroundTint">@color/dark_gray</item>
+    </style>
+
     <style name="media_library_text_style">
         <item name="fontFamily">@font/ys_display_bold</item>
         <item name="android:textSize">@dimen/text_size_medium</item>

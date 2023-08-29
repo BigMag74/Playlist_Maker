@@ -110,17 +110,16 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/likeButton"
-            style="@style/FAB_color"
+            style="@style/like_button_style"
             android:layout_width="51dp"
             android:layout_height="51dp"
             android:layout_marginTop="54dp"
-            android:src="@drawable/like"
+            android:src="@drawable/like_button_not_pressed"
             app:elevation="0dp"
             app:fabCustomSize="51dp"
             app:layout_constraintEnd_toStartOf="@id/rightBorder"
             app:layout_constraintStart_toEndOf="@id/playButton"
-            app:layout_constraintTop_toBottomOf="@+id/artistName"
-            app:tint="@color/white" />
+            app:layout_constraintTop_toBottomOf="@+id/artistName" />
 
         <TextView
             android:id="@+id/playTime"

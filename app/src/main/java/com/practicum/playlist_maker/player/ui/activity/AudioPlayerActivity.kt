@@ -1,15 +1,14 @@
 package com.practicum.playlist_maker.player.ui.activity
 
+import android.content.res.ColorStateList
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.player.domain.model.Track
@@ -34,11 +33,12 @@ class AudioPlayerActivity : AppCompatActivity() {
     lateinit var genre: TextView
     lateinit var country: TextView
     lateinit var playButton: ImageView
+    lateinit var likeButton: FloatingActionButton
 
 
     private lateinit var url: String
     private lateinit var track: Track
-    private val audioPlayerViewModel: AudioPlayerViewModel by viewModel { parametersOf(url) }
+    private val audioPlayerViewModel: AudioPlayerViewModel by viewModel { parametersOf(track) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +71,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         genre = findViewById(R.id.genreRight)
         country = findViewById(R.id.countryRight)
         playButton = findViewById(R.id.playButton)
+        likeButton = findViewById(R.id.likeButton)
 
         initializeIcon()
         trackName.text = track.trackName
@@ -85,6 +86,12 @@ class AudioPlayerActivity : AppCompatActivity() {
         playButton.setOnClickListener {
             audioPlayerViewModel.playbackControl()
         }
+
+        likeButton.setOnClickListener {
+            audioPlayerViewModel.onFavoriteClicked()
+        }
+
+
     }
 
     private fun initializeIcon() {
@@ -120,6 +127,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private fun render(state: AudioPlayerState) {
         playButton.isEnabled = state.isPlayButtonEnabled
         playTime.text = state.progress
+        setLikeImage()
         when (state) {
             is AudioPlayerState.Default, is AudioPlayerState.Prepared, is AudioPlayerState.Paused -> {
                 changePlayButtonImageToPlay()
@@ -138,6 +146,25 @@ class AudioPlayerActivity : AppCompatActivity() {
     private fun changePlayButtonImageToPause() {
         playButton.setImageResource(R.drawable.pause_button)
     }
+
+    private fun setLikeImage() {
+        if (track.isFavorite) {
+            changeLikeButtonImageToRed()
+        } else {
+            changeLikeButtonImageToWhite()
+        }
+    }
+
+    private fun changeLikeButtonImageToWhite() {
+        likeButton.setImageResource(R.drawable.like_button_not_pressed)
+        likeButton.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.white))
+    }
+
+    private fun changeLikeButtonImageToRed() {
+        likeButton.setImageResource(R.drawable.like_button_pressed)
+        likeButton.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.red_light))
+    }
+
 
 
     companion object {
