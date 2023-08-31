@@ -1,7 +1,7 @@
 package com.practicum.playlist_maker.player.domain.model
 
 
-data class Track(
+class Track(
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Int,

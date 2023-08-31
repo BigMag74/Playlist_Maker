@@ -26,11 +26,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
 
-    private lateinit var placeholderText: TextView
-    private lateinit var placeholderImage: ImageView
-    private lateinit var recyclerView: RecyclerView
+    private var placeholderText: TextView? = null
+    private var placeholderImage: ImageView? = null
+    private var recyclerView: RecyclerView? = null
 
-    private lateinit var trackAdapter: TrackAdapter
+    private var trackAdapter: TrackAdapter? = null
 
     private val favoriteTracksFragmentViewModel: FavoriteTracksFragmentViewModel by viewModel()
 
@@ -68,7 +68,7 @@ class FavoriteTracksFragment : Fragment() {
         }
 
         trackAdapter = TrackAdapter(onClickListener)
-        recyclerView.adapter = trackAdapter
+        recyclerView?.adapter = trackAdapter
 
     }
 
@@ -92,18 +92,18 @@ class FavoriteTracksFragment : Fragment() {
     private fun render(state: FavoriteScreenState) {
         when (state) {
             is FavoriteScreenState.Empty -> {
-                placeholderText.visibility = View.VISIBLE
-                placeholderImage.visibility = View.VISIBLE
-                recyclerView.visibility = View.GONE
+                placeholderText?.visibility = View.VISIBLE
+                placeholderImage?.visibility = View.VISIBLE
+                recyclerView?.visibility = View.GONE
             }
             is FavoriteScreenState.Content -> {
-                placeholderText.visibility = View.GONE
-                placeholderImage.visibility = View.GONE
-                recyclerView.visibility = View.VISIBLE
+                placeholderText?.visibility = View.GONE
+                placeholderImage?.visibility = View.GONE
+                recyclerView?.visibility = View.VISIBLE
 
-                trackAdapter.tracks.clear()
-                trackAdapter.tracks.addAll(state.tracks)
-                trackAdapter.notifyDataSetChanged()
+                trackAdapter?.tracks?.clear()
+                trackAdapter?.tracks?.addAll(state.tracks)
+                trackAdapter?.notifyDataSetChanged()
             }
         }
     }
