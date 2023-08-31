@@ -5,7 +5,8 @@ import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.search.domain.api.TracksInteractor
 import com.practicum.playlist_maker.search.ui.SearchState
-import com.practicum.playlist_maker.utils.debounce
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewModel() {
@@ -14,6 +15,11 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
     private val stateLiveData = MutableLiveData<SearchState>()
     fun observeState(): LiveData<SearchState> = stateLiveData
 
+    init {
+        showHistory()
+    }
+
+    private var searchJob: Job? = null
 
     private fun renderState(state: SearchState) {
         stateLiveData.postValue(state)
@@ -21,15 +27,19 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
 
     private var latestSearchText: String? = null
 
-    private val tracksSearchDebounce =
-        debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) { changedText ->
-            searchRequest(changedText)
-        }
 
     fun searchDebounce(changedText: String) {
         if (latestSearchText != changedText) {
             latestSearchText = changedText
-            tracksSearchDebounce(changedText)
+
+            searchJob?.cancel()
+            searchJob = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                searchRequest(changedText)
+            }
+        }
+        if (changedText.isEmpty()) {
+            searchJob?.cancel()
         }
     }
 
@@ -44,6 +54,7 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
                 }
             }
         }
+
     }
 
     private fun processResult(foundTracks: List<Track>?, message: String?) {
@@ -95,9 +106,17 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
         tracksInteractor.addTrackToSearchHistory(track)
     }
 
-    fun getTracksFromSearchHistory(): ArrayList<Track> {
-        return tracksInteractor.getTracksFromSearchHistory()
+    fun showHistory() {
+        viewModelScope.launch {
+            tracksInteractor.getTracksFromSearchHistory().collect { tracks ->
+                if (tracks.isEmpty())
+                    renderState(SearchState.SearchHistory(null))
+                else
+                    renderState(SearchState.SearchHistory(tracks))
+            }
+        }
     }
+
 
     fun clearSearchHistory() {
         tracksInteractor.clearSearchHistory()

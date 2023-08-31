@@ -14,7 +14,7 @@ import com.practicum.playlist_maker.databinding.FragmentMediaLibraryBinding
 class MediaLibraryFragment : Fragment() {
 
     private lateinit var binding: FragmentMediaLibraryBinding
-    private lateinit var tabMediator: TabLayoutMediator
+    private var tabMediator: TabLayoutMediator? = null
 
 
     override fun onCreateView(
@@ -38,12 +38,12 @@ class MediaLibraryFragment : Fragment() {
             }
         }
 
-        tabMediator.attach()
+        tabMediator?.attach()
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
-        tabMediator.detach()
+        tabMediator?.detach()
     }
 }

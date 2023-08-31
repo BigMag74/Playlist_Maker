@@ -10,7 +10,7 @@
         android:id="@+id/searchFragment"
         android:name="com.practicum.playlist_maker.search.ui.activity.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_audioPlayerActivity"
             app:destination="@id/audioPlayerActivity" />
@@ -24,7 +24,11 @@
         android:id="@+id/mediaLibraryFragment"
         android:name="com.practicum.playlist_maker.mediaLibrary.ui.activity.MediaLibraryFragment"
         android:label="fragment_media_library"
-        tools:layout="@layout/fragment_media_library" />
+        tools:layout="@layout/fragment_media_library">
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_audioPlayerActivity"
+            app:destination="@id/audioPlayerActivity" />
+    </fragment>
     <activity
         android:id="@+id/audioPlayerActivity"
         android:name="com.practicum.playlist_maker.player.ui.activity.AudioPlayerActivity"

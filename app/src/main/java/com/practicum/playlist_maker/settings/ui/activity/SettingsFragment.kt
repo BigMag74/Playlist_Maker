@@ -20,18 +20,21 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment() {
 
-    private lateinit var shareButton: FrameLayout
-    private lateinit var supportButton: FrameLayout
-    private lateinit var userAgreementButton: FrameLayout
-    private lateinit var themeSwitcher: SwitchMaterial
+    private var shareButton: FrameLayout? = null
+    private var supportButton: FrameLayout? = null
+    private var userAgreementButton: FrameLayout? = null
+    private var themeSwitcher: SwitchMaterial? = null
 
     private val viewModel: SettingsViewModel by viewModel<SettingsViewModel>()
 
     private lateinit var binding: FragmentSettingsBinding
 
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -41,15 +44,18 @@ class SettingsFragment : Fragment() {
         initViews()
 
 
-        shareButton.setOnClickListener {
+        shareButton?.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.yandex_practicum_URL))
 
-            startActivityOrShowErrorMessage(intent,getString(R.string.there_is_no_app_on_the_device_to_make_this_request))
+            startActivityOrShowErrorMessage(
+                intent,
+                getString(R.string.there_is_no_app_on_the_device_to_make_this_request)
+            )
         }
 
-        supportButton.setOnClickListener {
+        supportButton?.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:")
                 putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.my_email)))
@@ -57,18 +63,24 @@ class SettingsFragment : Fragment() {
                 putExtra(Intent.EXTRA_TEXT, getString(R.string.email_text))
             }
 
-            startActivityOrShowErrorMessage(intent, getString(R.string.there_is_no_app_on_the_device_to_send_email))
+            startActivityOrShowErrorMessage(
+                intent,
+                getString(R.string.there_is_no_app_on_the_device_to_send_email)
+            )
         }
-        userAgreementButton.setOnClickListener {
+        userAgreementButton?.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(getString(R.string.user_agreement_URL))
 
-            startActivityOrShowErrorMessage(intent,getString(R.string.there_is_no_browser_on_the_device))
+            startActivityOrShowErrorMessage(
+                intent,
+                getString(R.string.there_is_no_browser_on_the_device)
+            )
         }
 
-        themeSwitcher.isChecked = viewModel.isDarkTheme
+        themeSwitcher?.isChecked = viewModel.isDarkTheme
 
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+        themeSwitcher?.setOnCheckedChangeListener { switcher, checked ->
             viewModel.switchTheme(checked)
         }
 
@@ -85,8 +97,7 @@ class SettingsFragment : Fragment() {
     private fun startActivityOrShowErrorMessage(intent: Intent, message: String) {
         try {
             startActivity(intent)
-        }
-        catch (e:Exception){
+        } catch (e: Exception) {
             Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         }
 

@@ -1,16 +1,22 @@
-package com.practicum.playlist_maker.player.domain.model
+package com.practicum.playlist_maker.player.data.db.entity
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-class Track(
+@Entity(tableName = "track_table")
+data class TrackEntity(
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Int,
     val artworkUrl100: String,
+
+    @PrimaryKey
     val trackId: Int,
+
     val collectionName: String,
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String,
-    var isFavorite: Boolean = false
+    val created_at: Long,
 )
