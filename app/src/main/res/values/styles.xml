@@ -109,5 +109,10 @@
         <item name="itemTextColor">@color/bottom_nav_color_not_night</item>
     </style>
 
+    <style name="new_playlist_editText_style">
+        <item name="android:textColorHint">@color/black_and_white</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+    </style>
+
 
 </resources>

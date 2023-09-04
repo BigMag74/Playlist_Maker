@@ -22,7 +22,7 @@ class FavoriteTrackInteractorImpl(private val favoriteTracksRepository: Favorite
         return favoriteTracksRepository.getFavoriteTracks()
     }
 
-    override fun getFavoriteTrackIds(): Flow<List<Int>>{
+    override fun getFavoriteTrackIds(): Flow<List<Int>> {
         return favoriteTracksRepository.getFavoriteTrackIds()
     }
 }

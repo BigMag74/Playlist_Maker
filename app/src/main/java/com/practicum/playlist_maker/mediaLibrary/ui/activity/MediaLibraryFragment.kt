@@ -13,16 +13,17 @@ import com.practicum.playlist_maker.databinding.FragmentMediaLibraryBinding
 
 class MediaLibraryFragment : Fragment() {
 
-    private lateinit var binding: FragmentMediaLibraryBinding
-    private var tabMediator: TabLayoutMediator? = null
+    private var _binding: FragmentMediaLibraryBinding? = null
+    private val binding get() = _binding!!
 
+    private var tabMediator: TabLayoutMediator? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMediaLibraryBinding.inflate(inflater, container, false)
+        _binding = FragmentMediaLibraryBinding.inflate(inflater, container, false)
         return binding.root
     }
 

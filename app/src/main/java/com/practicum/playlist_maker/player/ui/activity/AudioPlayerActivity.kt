@@ -42,11 +42,12 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var track: Track
     private val audioPlayerViewModel: AudioPlayerViewModel by viewModel { parametersOf(track) }
 
-    private lateinit var binding: ActivityAudioPlayerBinding
+    private var _binding: ActivityAudioPlayerBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
+        _binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         track = Gson().fromJson(intent.getStringExtra(SearchFragment.TRACK), Track::class.java)

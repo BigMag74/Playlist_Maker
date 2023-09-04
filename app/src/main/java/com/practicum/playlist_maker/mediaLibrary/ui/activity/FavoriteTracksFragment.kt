@@ -34,7 +34,8 @@ class FavoriteTracksFragment : Fragment() {
 
     private val favoriteTracksFragmentViewModel: FavoriteTracksFragmentViewModel by viewModel()
 
-    private lateinit var binding: FragmentFavoriteTracksBinding
+    private var _binding: FragmentFavoriteTracksBinding? = null
+    private val binding get() = _binding!!
 
     private var isClickAllowed = true
 
@@ -42,7 +43,7 @@ class FavoriteTracksFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
+        _binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
         return binding.root
     }
 

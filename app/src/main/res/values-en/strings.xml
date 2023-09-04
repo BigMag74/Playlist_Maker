@@ -32,5 +32,13 @@
     <string name="there_is_no_app_on_the_device_to_make_this_request">There is no app on the device to make this request</string>
     <string name="there_is_no_app_on_the_device_to_send_email">There is no app on the device to send email</string>
     <string name="there_is_no_browser_on_the_device">There is no browser on the device</string>
+    <string name="name_with_star">Name*</string>
+    <string name="description">Description</string>
+    <string name="create">Create</string>
+    <string name="finish_creating_a_playlist">Finish creating a playlist?</string>
+    <string name="cancel">Cancel</string>
+    <string name="finish">Finish</string>
+    <string name="playlist">Playlist</string>
+    <string name="created">created</string>
 
 </resources>

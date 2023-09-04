@@ -85,7 +85,7 @@ class AudioPlayerViewModel(
         }
     }
 
-    fun setFavoriteTrack() {
+    private fun setFavoriteTrack() {
         viewModelScope.launch {
             favoriteTrackInteractor.getFavoriteTrackIds().collect() {
                 state.value?.isFavorite = it.contains(track.trackId)

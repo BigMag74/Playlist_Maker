@@ -1,6 +1,7 @@
 package com.practicum.playlist_maker
 
 import android.app.Application
+import com.practicum.playlist_maker.creationPlaylist.di.creationPlaylistModule
 import com.practicum.playlist_maker.mediaLibrary.di.mediaLibraryModule
 import com.practicum.playlist_maker.player.di.audioPlayerDataModule
 import com.practicum.playlist_maker.player.di.audioPlayerModule
@@ -40,6 +41,7 @@ class App : Application() {
                 settingsRepositoryModule,
                 settingsViewModelModule,
                 mediaLibraryModule,
+                creationPlaylistModule,
             )
 
         }
