@@ -1,5 +1,6 @@
 package com.practicum.playlist_maker.search.ui.view_model
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.player.domain.model.Track
@@ -120,6 +121,7 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
 
     fun clearSearchHistory() {
         tracksInteractor.clearSearchHistory()
+        renderState(SearchState.SearchHistory(null))
     }
 
 

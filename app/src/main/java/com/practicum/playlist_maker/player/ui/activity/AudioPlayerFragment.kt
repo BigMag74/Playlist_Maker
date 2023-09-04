@@ -2,18 +2,26 @@ package com.practicum.playlist_maker.player.ui.activity
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.practicum.playlist_maker.R
-import com.practicum.playlist_maker.databinding.ActivityAudioPlayerBinding
-import com.practicum.playlist_maker.databinding.ActivityRootBinding
+import com.practicum.playlist_maker.databinding.AudioPlayerFragmentBinding
 import com.practicum.playlist_maker.player.domain.model.Track
+import com.practicum.playlist_maker.player.ui.AudioPlayerAdapter
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
 import com.practicum.playlist_maker.player.ui.view_model.AudioPlayerViewModel
 import com.practicum.playlist_maker.search.ui.activity.SearchFragment
@@ -22,7 +30,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 
-class AudioPlayerActivity : AppCompatActivity() {
+class AudioPlayerFragment : Fragment() {
 
     private var trackIcon: ImageView? = null
     private var trackName: TextView? = null
@@ -35,34 +43,94 @@ class AudioPlayerActivity : AppCompatActivity() {
     private var genre: TextView? = null
     private var country: TextView? = null
     private var playButton: ImageView? = null
+    private var addToPlaylistButton: FloatingActionButton? = null
     private var likeButton: FloatingActionButton? = null
+    private var recyclerView: RecyclerView? = null
+    private var bottomSheet: LinearLayout? = null
+    private var overlay: View? = null
+    private var createNewPlaylistButton: Button? = null
 
+    private var playlistAdapter: AudioPlayerAdapter? = null
+
+    private var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
 
     private var url: String? = null
     private lateinit var track: Track
     private val audioPlayerViewModel: AudioPlayerViewModel by viewModel { parametersOf(track) }
 
-    private var _binding: ActivityAudioPlayerBinding? = null
+    private var _binding: AudioPlayerFragmentBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = AudioPlayerFragmentBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        track = Gson().fromJson(intent.getStringExtra(SearchFragment.TRACK), Track::class.java)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        track = Gson().fromJson(arguments?.getString(SearchFragment.TRACK), Track::class.java)
         url = track.previewUrl
 
-
         initialize(track)
+        initializeBottomSheet()
+        setOnClickListeners()
 
-        binding.backButton.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-
-        audioPlayerViewModel.state.observe(this) {
+        audioPlayerViewModel.state.observe(viewLifecycleOwner) {
             render(it)
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
+            View.GONE
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
+            View.VISIBLE
+    }
+
+    private fun setOnClickListeners() {
+        binding.backButton.setOnClickListener { findNavController().navigateUp() }
+
+        addToPlaylistButton?.setOnClickListener {
+            bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        createNewPlaylistButton?.setOnClickListener {
+            findNavController().navigate(R.id.action_audioPlayerActivity_to_creationPlaylistFragment)
+        }
+    }
+
+    private fun initializeBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet!!).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        bottomSheetBehavior?.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        overlay?.visibility = View.GONE
+                    }
+                    else -> {
+                        overlay?.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+    }
 
     private fun initialize(track: Track) {
         trackIcon = binding.trackIcon
@@ -76,7 +144,12 @@ class AudioPlayerActivity : AppCompatActivity() {
         genre = binding.genreRight
         country = binding.countryRight
         playButton = binding.playButton
+        addToPlaylistButton = binding.addToPlaylistButton
         likeButton = binding.likeButton
+        recyclerView = binding.bottomSheetRecyclerView
+        bottomSheet = binding.bottomSheet
+        overlay = binding.overlay
+        createNewPlaylistButton = binding.createNewPlaylistButton
 
         initializeIcon()
         trackName?.text = track.trackName
@@ -95,6 +168,9 @@ class AudioPlayerActivity : AppCompatActivity() {
         likeButton?.setOnClickListener {
             audioPlayerViewModel.onFavoriteClicked()
         }
+
+        playlistAdapter = AudioPlayerAdapter()
+        recyclerView?.adapter = playlistAdapter
 
 
     }

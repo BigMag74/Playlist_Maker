@@ -6,5 +6,5 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val audioPlayerViewModelModule = module {
-    viewModel { (track: Track) -> AudioPlayerViewModel(get(), track, get()) }
+    viewModel { (track: Track) -> AudioPlayerViewModel(get(), track, get(), get()) }
 }

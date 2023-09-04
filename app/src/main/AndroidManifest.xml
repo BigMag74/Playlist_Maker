@@ -26,9 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".player.ui.activity.AudioPlayerActivity"
-            android:exported="false" />
 
     </application>
 

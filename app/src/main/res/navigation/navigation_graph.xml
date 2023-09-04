@@ -32,11 +32,15 @@
             android:id="@+id/action_mediaLibraryFragment_to_creationPlaylistFragment"
             app:destination="@id/creationPlaylistFragment" />
     </fragment>
-    <activity
+    <fragment
         android:id="@+id/audioPlayerActivity"
-        android:name="com.practicum.playlist_maker.player.ui.activity.AudioPlayerActivity"
+        android:name="com.practicum.playlist_maker.player.ui.activity.AudioPlayerFragment"
         android:label="activity_audio_player"
-        tools:layout="@layout/activity_audio_player" />
+        tools:layout="@layout/audio_player_fragment">
+        <action
+            android:id="@+id/action_audioPlayerActivity_to_creationPlaylistFragment"
+            app:destination="@id/creationPlaylistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/creationPlaylistFragment"
         android:name="com.practicum.playlist_maker.creationPlaylist.ui.activity.CreationPlaylistFragment"

@@ -21,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.imageview.ShapeableImageView
 import com.practicum.playlist_maker.R
@@ -75,6 +76,62 @@ class CreationPlaylistFragment : Fragment() {
 
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
+        dialog = MaterialAlertDialogBuilder(requireContext(), R.style.dialog_style)
+            .setTitle(getString(R.string.finish_creating_a_playlist))
+            .setNeutralButton(getString(R.string.cancel)) { _, _ ->
+            }
+            .setPositiveButton(getString(R.string.finish)) { _, _ ->
+                findNavController().navigateUp()
+            }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            callback
+        )
+
+        setOnClickListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
+            View.GONE
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
+            View.VISIBLE
+    }
+
+    private val callback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (isImageChanged || playlistName?.text?.isNotEmpty() == true || playlistDescription?.text?.isNotEmpty() == true) {
+                    dialog?.show()
+                } else {
+                    findNavController().navigateUp()
+                }
+
+            }
+        }
+
+    private val textWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            if (p0.isNullOrEmpty())
+                render(CreationPlaylistState.EmptyName())
+            else
+                render(CreationPlaylistState.ContentName())
+        }
+
+        override fun afterTextChanged(p0: Editable?) {}
+
+    }
+
+    private fun setOnClickListeners() {
+
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
@@ -85,25 +142,13 @@ class CreationPlaylistFragment : Fragment() {
                 }
             }
 
-        dialog = MaterialAlertDialogBuilder(requireContext(), R.style.dialog_style)
-            .setTitle(getString(R.string.finish_creating_a_playlist))
-            .setNeutralButton(getString(R.string.cancel)) { _, _ ->
-            }
-            .setPositiveButton(getString(R.string.finish)) { _, _ ->
-                findNavController().navigateUp()
-            }
-
         playlistImage?.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
-        playlistName?.addTextChangedListener(textWatcher)
-
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            callback
-        )
 
         backButton?.setOnClickListener { showDialogBeforeExit() }
+
+        playlistName?.addTextChangedListener(textWatcher)
 
         createButton?.setOnClickListener {
             imageUri?.let { it1 -> saveImageToPrivateStorage(it1) }
@@ -123,35 +168,6 @@ class CreationPlaylistFragment : Fragment() {
             ).show()
             findNavController().navigateUp()
         }
-
-    }
-
-
-    private val callback: OnBackPressedCallback =
-        object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (isImageChanged || playlistName?.text?.isNotEmpty() == true || playlistDescription?.text?.isNotEmpty() == true) {
-                    dialog?.show()
-                } else {
-                    findNavController().navigateUp()
-                }
-
-            }
-        }
-
-
-    private val textWatcher: TextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            if (p0.isNullOrEmpty())
-                render(CreationPlaylistState.EmptyName())
-            else
-                render(CreationPlaylistState.ContentName())
-        }
-
-        override fun afterTextChanged(p0: Editable?) {}
-
     }
 
     private fun saveImageToPrivateStorage(uri: Uri) {

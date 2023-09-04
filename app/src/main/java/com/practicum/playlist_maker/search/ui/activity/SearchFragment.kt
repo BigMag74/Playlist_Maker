@@ -2,7 +2,6 @@ package com.practicum.playlist_maker.search.ui.activity
 
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,20 +19,17 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.practicum.playlist_maker.*
 import com.practicum.playlist_maker.databinding.FragmentSearchBinding
 import com.practicum.playlist_maker.player.domain.model.Track
-import com.practicum.playlist_maker.player.ui.activity.AudioPlayerActivity
 import com.practicum.playlist_maker.search.ui.SearchHistoryAdapter
 import com.practicum.playlist_maker.search.ui.SearchState
 import com.practicum.playlist_maker.search.ui.TrackAdapter
 import com.practicum.playlist_maker.search.ui.TracksClickListener
 import com.practicum.playlist_maker.search.ui.view_model.SearchViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -58,12 +54,9 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-
     var editTextText = ""
 
     private lateinit var handler: Handler
-
-    private var isClickAllowed = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,13 +74,14 @@ class SearchFragment : Fragment() {
 
         val onClickListener = object : TracksClickListener {
             override fun onTrackClick(track: Track) {
-                if (clickDebounce()) {
-                    val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
-                    intent.putExtra(TRACK, Gson().toJson(track))
-                    startActivity(intent)
+                val bundle = Bundle()
+                bundle.putString(TRACK, Gson().toJson(track))
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_audioPlayerActivity,
+                    bundle
+                )
 
-                    viewModel.addTrackToSearchHistory(track)
-                }
+                viewModel.addTrackToSearchHistory(track)
             }
 
         }
@@ -200,6 +194,7 @@ class SearchFragment : Fragment() {
             historyLayout?.visibility = View.VISIBLE
             searchHistoryAdapter?.tracks = tracks as ArrayList<Track>
             historyRecyclerView?.adapter = searchHistoryAdapter
+            searchHistoryAdapter?.notifyDataSetChanged()
         }
     }
 
@@ -228,7 +223,7 @@ class SearchFragment : Fragment() {
             viewModel.clearSearchHistory()
             searchHistoryAdapter?.tracks = ArrayList()
             searchHistoryAdapter?.notifyDataSetChanged()
-            historyLayout?.visibility = View.GONE
+
         }
     }
 
@@ -272,26 +267,8 @@ class SearchFragment : Fragment() {
         }
     }
 
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
-                isClickAllowed = true
-            }
-        }
-        return current
-    }
-
     companion object {
         const val TRACK = "TRACK"
-
-        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
-
-        fun newInstance() = SearchFragment()
-        const val TAG = "SearchFragment"
     }
 
 }

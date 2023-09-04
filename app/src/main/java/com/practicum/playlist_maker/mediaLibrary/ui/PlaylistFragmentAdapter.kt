@@ -12,7 +12,7 @@ class PlaylistFragmentAdapter() :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistFragmentViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.playlist_layout, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.playlist_layout_for_media_library, parent, false)
         return PlaylistFragmentViewHolder(view)
     }
 

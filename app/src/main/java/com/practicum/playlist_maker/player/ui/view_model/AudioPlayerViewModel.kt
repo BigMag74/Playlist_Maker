@@ -1,6 +1,7 @@
 package com.practicum.playlist_maker.player.ui.view_model
 
 import androidx.lifecycle.*
+import com.practicum.playlist_maker.mediaLibrary.domain.db.PlaylistFragmentInteractor
 import com.practicum.playlist_maker.player.domain.api.AudioPlayer
 import com.practicum.playlist_maker.player.domain.db.FavoriteTrackInteractor
 import com.practicum.playlist_maker.player.domain.model.Track
@@ -14,7 +15,8 @@ import java.util.*
 class AudioPlayerViewModel(
     private val audioPlayer: AudioPlayer,
     private val track: Track,
-    private val favoriteTrackInteractor: FavoriteTrackInteractor
+    private val favoriteTrackInteractor: FavoriteTrackInteractor,
+    private val playlistFragmentInteractor: PlaylistFragmentInteractor
 ) :
     ViewModel() {
 

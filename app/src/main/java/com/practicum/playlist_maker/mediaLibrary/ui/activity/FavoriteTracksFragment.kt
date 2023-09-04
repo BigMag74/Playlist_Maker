@@ -2,7 +2,6 @@ package com.practicum.playlist_maker.mediaLibrary.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +9,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.practicum.playlist_maker.mediaLibrary.ui.view_model.FavoriteTracksFragmentViewModel
+import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.databinding.FragmentFavoriteTracksBinding
 import com.practicum.playlist_maker.mediaLibrary.ui.FavoriteScreenState
+import com.practicum.playlist_maker.mediaLibrary.ui.view_model.FavoriteTracksFragmentViewModel
 import com.practicum.playlist_maker.player.domain.model.Track
-import com.practicum.playlist_maker.player.ui.activity.AudioPlayerActivity
+import com.practicum.playlist_maker.player.ui.activity.AudioPlayerFragment
 import com.practicum.playlist_maker.search.ui.TrackAdapter
 import com.practicum.playlist_maker.search.ui.TracksClickListener
-import com.practicum.playlist_maker.search.ui.activity.SearchFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -60,11 +60,12 @@ class FavoriteTracksFragment : Fragment() {
 
         val onClickListener = object : TracksClickListener {
             override fun onTrackClick(track: Track) {
-                if (clickDebounce()) {
-                    val intent = Intent(requireContext(), AudioPlayerActivity::class.java)
-                    intent.putExtra(TRACK, Gson().toJson(track))
-                    startActivity(intent)
-                }
+                val bundle = Bundle()
+                bundle.putString(TRACK, Gson().toJson(track))
+                findNavController().navigate(
+                    R.id.action_mediaLibraryFragment_to_audioPlayerActivity,
+                    bundle
+                )
             }
         }
 
@@ -78,17 +79,6 @@ class FavoriteTracksFragment : Fragment() {
         favoriteTracksFragmentViewModel.loadTracks()
     }
 
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
-                isClickAllowed = true
-            }
-        }
-        return current
-    }
 
     private fun render(state: FavoriteScreenState) {
         when (state) {
