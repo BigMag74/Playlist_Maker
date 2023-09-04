@@ -32,17 +32,20 @@
         app:layout_constraintStart_toEndOf="@+id/backButton"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/addPhotoImageView"
         android:layout_width="312dp"
         android:layout_height="312dp"
         android:layout_marginTop="42dp"
         android:clickable="true"
         android:focusable="true"
+        android:scaleType="centerCrop"
         android:src="@drawable/add_playlist_image_placeholder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newPlaylistTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/newPlaylistTextView"
+        app:shapeAppearanceOverlay="@style/rounded_image_view" />
 
 
     <EditText

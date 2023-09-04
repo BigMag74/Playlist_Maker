@@ -114,5 +114,14 @@
         <item name="android:textSize">@dimen/text_size_small</item>
     </style>
 
+    <style name="rounded_image_view">
+        <item name="cornerSize">8dp</item>
+    </style>
+
+
+    <style name="dialog_style" parent="">
+        <item name="colorPrimary">@color/blue</item>
+    </style>
+
 
 </resources>

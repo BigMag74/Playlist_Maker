@@ -3,6 +3,7 @@
     <dimen name="text_size_big">22sp</dimen>
     <dimen name="text_size_medium">19sp</dimen>
     <dimen name="text_size_small">16sp</dimen>
+    <dimen name="text_size_very_small">12sp</dimen>
 
     <dimen name="hint_size">11sp</dimen>
 

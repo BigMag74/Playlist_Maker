@@ -22,6 +22,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.imageview.ShapeableImageView
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 import com.practicum.playlist_maker.creationPlaylist.ui.CreationPlaylistState
@@ -38,7 +39,7 @@ class CreationPlaylistFragment : Fragment() {
     private val creationPlaylistViewModel: CreationPlaylistViewModel by viewModel()
 
     private var backButton: ImageView? = null
-    private var playlistImage: ImageView? = null
+    private var playlistImage: ShapeableImageView? = null
     private var playlistName: EditText? = null
     private var playlistDescription: EditText? = null
     private var createButton: AppCompatButton? = null
@@ -84,14 +85,13 @@ class CreationPlaylistFragment : Fragment() {
                 }
             }
 
-        dialog = MaterialAlertDialogBuilder(requireContext())
+        dialog = MaterialAlertDialogBuilder(requireContext(), R.style.dialog_style)
             .setTitle(getString(R.string.finish_creating_a_playlist))
             .setNeutralButton(getString(R.string.cancel)) { _, _ ->
             }
             .setPositiveButton(getString(R.string.finish)) { _, _ ->
                 findNavController().navigateUp()
             }
-
 
         playlistImage?.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))

@@ -40,5 +40,6 @@
     <string name="finish">Завершить</string>
     <string name="playlist">Плейлист</string>
     <string name="created">создан</string>
+    <string name="tracks">треков</string>
 
 </resources>

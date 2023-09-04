@@ -9,7 +9,8 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val creationPlaylistModule = module {
-    single<CreationPlaylistRepository>{CreationPlaylistRepositoryImpl(get())}
+
+    single<CreationPlaylistRepository> { CreationPlaylistRepositoryImpl(get()) }
     single<CreationPlaylistInteractor> { CreationPlaylistInteractorImpl(get()) }
     viewModel { CreationPlaylistViewModel(get()) }
 }

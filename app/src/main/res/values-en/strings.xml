@@ -40,5 +40,6 @@
     <string name="finish">Finish</string>
     <string name="playlist">Playlist</string>
     <string name="created">created</string>
+    <string name="tracks">tracks</string>
 
 </resources>

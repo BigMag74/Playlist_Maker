@@ -7,9 +7,9 @@
             <stroke
                 android:width="2dp"
                 android:color="@color/gray"
-                android:dashWidth="16dp"
-                android:dashGap="16dp" />
-            <corners android:radius="10dp" />
+                android:dashWidth="32dp"
+                android:dashGap="32dp" />
+            <corners android:radius="8dp" />
         </shape>
 
     </item>
