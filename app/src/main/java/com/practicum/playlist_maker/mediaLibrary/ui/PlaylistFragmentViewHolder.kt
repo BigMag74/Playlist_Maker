@@ -1,6 +1,5 @@
 package com.practicum.playlist_maker.mediaLibrary.ui
 
-import android.annotation.SuppressLint
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView

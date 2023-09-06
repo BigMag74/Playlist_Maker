@@ -20,6 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.databinding.AudioPlayerFragmentBinding
+import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentState
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.player.ui.AudioPlayerAdapter
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
@@ -83,10 +84,15 @@ class AudioPlayerFragment : Fragment() {
         audioPlayerViewModel.state.observe(viewLifecycleOwner) {
             render(it)
         }
+
+        audioPlayerViewModel.playlistsState.observe(viewLifecycleOwner) {
+            renderPlaylist(it)
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        audioPlayerViewModel.loadPlaylists()
         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
             View.GONE
     }
@@ -132,6 +138,7 @@ class AudioPlayerFragment : Fragment() {
         })
     }
 
+
     private fun initialize(track: Track) {
         trackIcon = binding.trackIcon
         trackName = binding.trackName
@@ -172,7 +179,6 @@ class AudioPlayerFragment : Fragment() {
         playlistAdapter = AudioPlayerAdapter()
         recyclerView?.adapter = playlistAdapter
 
-
     }
 
     private fun initializeIcon() {
@@ -206,7 +212,6 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
-
     private fun render(state: AudioPlayerState) {
         playButton?.isEnabled = state.isPlayButtonEnabled
         playTime?.text = state.progress
@@ -221,6 +226,19 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
+    private fun renderPlaylist(state: PlaylistFragmentState) {
+        when (state) {
+            is PlaylistFragmentState.EmptyPlaylists -> {
+                playlistAdapter?.playlists?.clear()
+                playlistAdapter?.notifyDataSetChanged()
+            }
+            is PlaylistFragmentState.ContentPlaylists -> {
+                playlistAdapter?.playlists?.clear()
+                playlistAdapter?.playlists?.addAll(state.playlists)
+                playlistAdapter?.notifyDataSetChanged()
+            }
+        }
+    }
 
     private fun changePlayButtonImageToPlay() {
         playButton?.setImageResource(R.drawable.play_button)

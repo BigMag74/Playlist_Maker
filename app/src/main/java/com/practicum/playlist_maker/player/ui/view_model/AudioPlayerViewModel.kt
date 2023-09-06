@@ -1,7 +1,9 @@
 package com.practicum.playlist_maker.player.ui.view_model
 
 import androidx.lifecycle.*
+import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 import com.practicum.playlist_maker.mediaLibrary.domain.db.PlaylistFragmentInteractor
+import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentState
 import com.practicum.playlist_maker.player.domain.api.AudioPlayer
 import com.practicum.playlist_maker.player.domain.db.FavoriteTrackInteractor
 import com.practicum.playlist_maker.player.domain.model.Track
@@ -23,6 +25,9 @@ class AudioPlayerViewModel(
     private val _state = MutableLiveData<AudioPlayerState>()
     val state: LiveData<AudioPlayerState> = _state
 
+    private val _playlistsState = MutableLiveData<PlaylistFragmentState>()
+    val playlistsState: LiveData<PlaylistFragmentState> = _playlistsState
+
     private var timerJob: Job? = null
 
 
@@ -33,6 +38,7 @@ class AudioPlayerViewModel(
         setOnCompleteListener()
     }
 
+
     private fun prepareAudioPlayer() {
         audioPlayer.preparePlayer(url = track.previewUrl) {
             setState(AudioPlayerState.Prepared(track.isFavorite))
@@ -42,21 +48,21 @@ class AudioPlayerViewModel(
 
     private fun startAudioPlayer() {
         audioPlayer.startPlayer()
-        setState(AudioPlayerState.Playing(getCurrentTrackTimePosition(),track.isFavorite))
+        setState(AudioPlayerState.Playing(getCurrentTrackTimePosition(), track.isFavorite))
         startTimer()
     }
 
     private fun pauseAudioPlayer() {
         audioPlayer.pausePlayer()
         timerJob?.cancel()
-        setState(AudioPlayerState.Paused(getCurrentTrackTimePosition(),track.isFavorite))
+        setState(AudioPlayerState.Paused(getCurrentTrackTimePosition(), track.isFavorite))
     }
 
     private fun startTimer() {
         timerJob = viewModelScope.launch {
             while (audioPlayer.isPlaying()) {
                 delay(UPDATE_DELAY_MILLIS)
-                setState(AudioPlayerState.Playing(getCurrentTrackTimePosition(),track.isFavorite))
+                setState(AudioPlayerState.Playing(getCurrentTrackTimePosition(), track.isFavorite))
             }
         }
     }
@@ -73,6 +79,22 @@ class AudioPlayerViewModel(
             setState(AudioPlayerState.Prepared(track.isFavorite))
             timerJob?.cancel()
         }
+    }
+
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            playlistFragmentInteractor.getPlaylists().collect() { playlists ->
+                if (playlists.isEmpty()) {
+                    setPlaylistState(PlaylistFragmentState.EmptyPlaylists())
+                } else {
+                    setPlaylistState(PlaylistFragmentState.ContentPlaylists(playlists))
+                }
+            }
+        }
+    }
+
+    private fun setPlaylistState(state: PlaylistFragmentState) {
+        _playlistsState.postValue(state)
     }
 
     fun playbackControl() {
