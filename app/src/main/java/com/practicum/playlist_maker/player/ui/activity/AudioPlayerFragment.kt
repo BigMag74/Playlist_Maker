@@ -1,7 +1,5 @@
 package com.practicum.playlist_maker.player.ui.activity
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,9 +9,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -22,9 +20,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.practicum.playlist_maker.R
+import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 import com.practicum.playlist_maker.databinding.AudioPlayerFragmentBinding
-import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentState
 import com.practicum.playlist_maker.player.domain.model.Track
+import com.practicum.playlist_maker.player.ui.AddTrackToPlaylistState
 import com.practicum.playlist_maker.player.ui.AudioPlayerAdapter
 import com.practicum.playlist_maker.player.ui.AudioPlayerPlaylistsState
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
@@ -94,9 +93,17 @@ class AudioPlayerFragment : Fragment() {
             renderPlaylist(it)
         }
 
+        audioPlayerViewModel.addTrackToPlaylistState.observe(viewLifecycleOwner) {
+            renderAddTrackToPlaylist(it)
+        }
+
         playlistAdapter = AudioPlayerAdapter()
+        playlistAdapter?.onPlayListClicked = {
+            audioPlayerViewModel.addTrackToPlaylist(track, it)
+        }
         recyclerView?.adapter = playlistAdapter
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -242,6 +249,26 @@ class AudioPlayerFragment : Fragment() {
                 playlistAdapter?.playlists?.clear()
                 playlistAdapter?.playlists?.addAll(state.playlists)
                 playlistAdapter?.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun renderAddTrackToPlaylist(state: AddTrackToPlaylistState) {
+        when (state) {
+            is AddTrackToPlaylistState.AlreadyAdded -> {
+                Toast.makeText(
+                    requireContext(),
+                    "${getString(R.string.track_has_already_been_added_to_the_playlist)} ${state.playlist.name}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is AddTrackToPlaylistState.AddedNow -> {
+                Toast.makeText(
+                    requireContext(),
+                    "${getString(R.string.added_to_playlist)} ${state.playlist.name}",
+                    Toast.LENGTH_LONG
+                ).show()
+                bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
     }

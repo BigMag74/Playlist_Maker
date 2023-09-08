@@ -94,11 +94,6 @@ class CreationPlaylistFragment : Fragment() {
         setOnClickListeners()
     }
 
-    override fun onResume() {
-        super.onResume()
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
-            View.GONE
-    }
 
     override fun onStop() {
         super.onStop()
@@ -131,9 +126,9 @@ class CreationPlaylistFragment : Fragment() {
         override fun afterTextChanged(p0: Editable?) {}
 
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        //if ok user selected a file
         if (resultCode == Activity.RESULT_OK) {
             val sourceTreeUri = data?.data
             context?.contentResolver?.takePersistableUriPermission(
@@ -150,6 +145,7 @@ class CreationPlaylistFragment : Fragment() {
                 if (uri != null) {
                     playlistImage?.setImageURI(uri)
                     imageUri = uri
+                    isImageChanged = true
                 } else {
                     Log.d("PhotoPicker", "No media selected")
                 }
@@ -170,7 +166,7 @@ class CreationPlaylistFragment : Fragment() {
                     name = playlistName!!.text.toString(),
                     description = playlistDescription?.text.toString(),
                     pathUri = imageUri,
-                    trackIds = null,
+                    trackIds = mutableListOf(),
                     countOfTracks = 0
                 )
             )
@@ -196,7 +192,6 @@ class CreationPlaylistFragment : Fragment() {
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
 
-        isImageChanged = true
     }
 
     private fun showDialogBeforeExit() {

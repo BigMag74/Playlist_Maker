@@ -9,7 +9,11 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 
-class AudioPlayerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class AudioPlayerViewHolder(
+    view: View,
+    private val playlistClickListener: ((playlist: Playlist) -> Unit)?
+) :
+    RecyclerView.ViewHolder(view) {
 
     private val playlistImage: ShapeableImageView = itemView.findViewById(R.id.playlistImage)
     private val playlistName: TextView = itemView.findViewById(R.id.playlistName)
@@ -27,5 +31,7 @@ class AudioPlayerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         playlistName.text = playlist.name
         playlistCountOfTracks.text =
             "${playlist.countOfTracks} ${itemView.context.getString(R.string.tracks)}"
+
+        itemView.setOnClickListener { playlistClickListener?.invoke(playlist) }
     }
 }

@@ -16,7 +16,7 @@ class CreationPlaylistRepositoryImpl(private val appDatabase: AppDatabase) :
 
     private fun convertFromPlaylistToPlaylistEntity(playlist: Playlist): PlaylistEntity {
         return PlaylistEntity(
-            id = 0,
+            id = playlist.id,
             name = playlist.name,
             description = playlist.description,
             path = playlist.pathUri.toString(),

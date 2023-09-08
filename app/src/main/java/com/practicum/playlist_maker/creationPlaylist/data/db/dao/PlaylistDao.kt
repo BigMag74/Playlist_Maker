@@ -12,7 +12,11 @@ interface PlaylistDao {
     @Delete(entity = PlaylistEntity::class)
     suspend fun deletePlaylist(playlist: PlaylistEntity)
 
+    @Update
+    suspend fun updatePlaylist(playlist: PlaylistEntity)
+
     @Query("SELECT * FROM playlist_table")
     suspend fun getPlaylists(): List<PlaylistEntity>
+
 
 }

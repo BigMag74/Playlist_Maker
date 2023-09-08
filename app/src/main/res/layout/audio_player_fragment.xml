@@ -209,6 +209,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/common_padding"
+                android:layout_marginEnd="@dimen/common_padding"
                 android:ellipsize="end"
                 android:maxLines="1"
                 app:layout_constrainedWidth="true"

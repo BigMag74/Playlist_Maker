@@ -42,5 +42,7 @@
     <string name="created">created</string>
     <string name="tracks">tracks</string>
     <string name="add_to_playlist">Add to playlist</string>
+    <string name="track_has_already_been_added_to_the_playlist">Track has already been added to the playlist:</string>
+    <string name="added_to_playlist">Added to playlist:</string>
 
 </resources>

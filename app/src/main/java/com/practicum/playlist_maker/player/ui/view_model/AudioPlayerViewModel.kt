@@ -1,5 +1,6 @@
 package com.practicum.playlist_maker.player.ui.view_model
 
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 import com.practicum.playlist_maker.mediaLibrary.domain.db.PlaylistFragmentInteractor
@@ -7,6 +8,7 @@ import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentState
 import com.practicum.playlist_maker.player.domain.api.AudioPlayer
 import com.practicum.playlist_maker.player.domain.db.FavoriteTrackInteractor
 import com.practicum.playlist_maker.player.domain.model.Track
+import com.practicum.playlist_maker.player.ui.AddTrackToPlaylistState
 import com.practicum.playlist_maker.player.ui.AudioPlayerPlaylistsState
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
 import kotlinx.coroutines.Job
@@ -23,11 +25,14 @@ class AudioPlayerViewModel(
 ) :
     ViewModel() {
 
-    private val _state = MutableLiveData<AudioPlayerState>()
+    private var _state = MutableLiveData<AudioPlayerState>()
     val state: LiveData<AudioPlayerState> = _state
 
-    private val _playlistsState = MutableLiveData<AudioPlayerPlaylistsState>()
+    private var _playlistsState = MutableLiveData<AudioPlayerPlaylistsState>()
     val playlistsState: LiveData<AudioPlayerPlaylistsState> = _playlistsState
+
+    private val _addTrackToPlaylistState = MutableLiveData<AddTrackToPlaylistState>()
+    val addTrackToPlaylistState: LiveData<AddTrackToPlaylistState> = _addTrackToPlaylistState
 
     private var timerJob: Job? = null
 
@@ -94,8 +99,15 @@ class AudioPlayerViewModel(
         }
     }
 
-    private fun setPlaylistState(state: AudioPlayerPlaylistsState) {
-        _playlistsState.postValue(state)
+    fun addTrackToPlaylist(track: Track, playlist: Playlist) {
+        if (playlist.trackIds.contains(track.trackId)) {
+            setAddTrackToPlaylistState(AddTrackToPlaylistState.AlreadyAdded(playlist))
+        } else {
+            viewModelScope.launch {
+                playlistFragmentInteractor.addTrackToPlaylist(track, playlist)
+            }
+            setAddTrackToPlaylistState(AddTrackToPlaylistState.AddedNow(playlist))
+        }
     }
 
     fun playbackControl() {
@@ -134,6 +146,13 @@ class AudioPlayerViewModel(
         _state.postValue(state)
     }
 
+    private fun setPlaylistState(state: AudioPlayerPlaylistsState) {
+        _playlistsState.postValue(state)
+    }
+
+    private fun setAddTrackToPlaylistState(state: AddTrackToPlaylistState) {
+        _addTrackToPlaylistState.postValue(state)
+    }
 
     override fun onCleared() {
         audioPlayer.destroyPlayer()

@@ -2,10 +2,11 @@ package com.practicum.playlist_maker.creationPlaylist.domain.model
 
 import android.net.Uri
 
-data class Playlist(
+class Playlist(
+    val id: Int = 0,
     val name: String,
     val description: String = "",
     val pathUri: Uri? = null,
-    val trackIds: List<Int>? = null,
-    val countOfTracks: Int = 0,
+    val trackIds: MutableList<Int> = mutableListOf(),
+    var countOfTracks: Int = 0,
 )
