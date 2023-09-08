@@ -7,6 +7,7 @@ import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentState
 import com.practicum.playlist_maker.player.domain.api.AudioPlayer
 import com.practicum.playlist_maker.player.domain.db.FavoriteTrackInteractor
 import com.practicum.playlist_maker.player.domain.model.Track
+import com.practicum.playlist_maker.player.ui.AudioPlayerPlaylistsState
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -25,8 +26,8 @@ class AudioPlayerViewModel(
     private val _state = MutableLiveData<AudioPlayerState>()
     val state: LiveData<AudioPlayerState> = _state
 
-    private val _playlistsState = MutableLiveData<PlaylistFragmentState>()
-    val playlistsState: LiveData<PlaylistFragmentState> = _playlistsState
+    private val _playlistsState = MutableLiveData<AudioPlayerPlaylistsState>()
+    val playlistsState: LiveData<AudioPlayerPlaylistsState> = _playlistsState
 
     private var timerJob: Job? = null
 
@@ -85,15 +86,15 @@ class AudioPlayerViewModel(
         viewModelScope.launch {
             playlistFragmentInteractor.getPlaylists().collect() { playlists ->
                 if (playlists.isEmpty()) {
-                    setPlaylistState(PlaylistFragmentState.EmptyPlaylists())
+                    setPlaylistState(AudioPlayerPlaylistsState.EmptyPlaylists())
                 } else {
-                    setPlaylistState(PlaylistFragmentState.ContentPlaylists(playlists))
+                    setPlaylistState(AudioPlayerPlaylistsState.ContentPlaylists(playlists))
                 }
             }
         }
     }
 
-    private fun setPlaylistState(state: PlaylistFragmentState) {
+    private fun setPlaylistState(state: AudioPlayerPlaylistsState) {
         _playlistsState.postValue(state)
     }
 

@@ -1,5 +1,7 @@
 package com.practicum.playlist_maker.creationPlaylist.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -128,6 +130,17 @@ class CreationPlaylistFragment : Fragment() {
 
         override fun afterTextChanged(p0: Editable?) {}
 
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        //if ok user selected a file
+        if (resultCode == Activity.RESULT_OK) {
+            val sourceTreeUri = data?.data
+            context?.contentResolver?.takePersistableUriPermission(
+                sourceTreeUri!!,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+        }
     }
 
     private fun setOnClickListeners() {

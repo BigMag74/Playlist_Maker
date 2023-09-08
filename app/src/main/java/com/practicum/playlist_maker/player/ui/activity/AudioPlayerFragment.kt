@@ -1,5 +1,7 @@
 package com.practicum.playlist_maker.player.ui.activity
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -23,6 +26,7 @@ import com.practicum.playlist_maker.databinding.AudioPlayerFragmentBinding
 import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentState
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.player.ui.AudioPlayerAdapter
+import com.practicum.playlist_maker.player.ui.AudioPlayerPlaylistsState
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
 import com.practicum.playlist_maker.player.ui.view_model.AudioPlayerViewModel
 import com.practicum.playlist_maker.search.ui.activity.SearchFragment
@@ -81,6 +85,7 @@ class AudioPlayerFragment : Fragment() {
         initializeBottomSheet()
         setOnClickListeners()
 
+
         audioPlayerViewModel.state.observe(viewLifecycleOwner) {
             render(it)
         }
@@ -88,11 +93,13 @@ class AudioPlayerFragment : Fragment() {
         audioPlayerViewModel.playlistsState.observe(viewLifecycleOwner) {
             renderPlaylist(it)
         }
+
+        playlistAdapter = AudioPlayerAdapter()
+        recyclerView?.adapter = playlistAdapter
     }
 
     override fun onResume() {
         super.onResume()
-        audioPlayerViewModel.loadPlaylists()
         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
             View.GONE
     }
@@ -129,6 +136,7 @@ class AudioPlayerFragment : Fragment() {
                         overlay?.visibility = View.GONE
                     }
                     else -> {
+                        audioPlayerViewModel.loadPlaylists()
                         overlay?.visibility = View.VISIBLE
                     }
                 }
@@ -176,8 +184,6 @@ class AudioPlayerFragment : Fragment() {
             audioPlayerViewModel.onFavoriteClicked()
         }
 
-        playlistAdapter = AudioPlayerAdapter()
-        recyclerView?.adapter = playlistAdapter
 
     }
 
@@ -226,13 +232,13 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
-    private fun renderPlaylist(state: PlaylistFragmentState) {
+    private fun renderPlaylist(state: AudioPlayerPlaylistsState) {
         when (state) {
-            is PlaylistFragmentState.EmptyPlaylists -> {
+            is AudioPlayerPlaylistsState.EmptyPlaylists -> {
                 playlistAdapter?.playlists?.clear()
                 playlistAdapter?.notifyDataSetChanged()
             }
-            is PlaylistFragmentState.ContentPlaylists -> {
+            is AudioPlayerPlaylistsState.ContentPlaylists -> {
                 playlistAdapter?.playlists?.clear()
                 playlistAdapter?.playlists?.addAll(state.playlists)
                 playlistAdapter?.notifyDataSetChanged()

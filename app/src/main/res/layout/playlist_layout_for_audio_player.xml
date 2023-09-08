@@ -6,7 +6,7 @@
     android:layout_marginBottom="8dp"
     android:orientation="horizontal">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/playlistImage"
         android:layout_width="45dp"
         android:layout_height="45dp" />
