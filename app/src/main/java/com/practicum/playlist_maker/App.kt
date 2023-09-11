@@ -15,7 +15,7 @@ import com.practicum.playlist_maker.search.di.searchViewModelModule
 import com.practicum.playlist_maker.settings.di.settingsInteractorModule
 import com.practicum.playlist_maker.settings.di.settingsRepositoryModule
 import com.practicum.playlist_maker.settings.di.settingsViewModelModule
-import com.practicum.playlist_maker.settings.domain.SettingsInteractor
+import com.practicum.playlist_maker.settings.domain.api.SettingsInteractor
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin

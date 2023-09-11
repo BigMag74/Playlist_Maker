@@ -3,7 +3,7 @@ package com.practicum.playlist_maker.settings.data
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.practicum.playlist_maker.KEY_FOR_SWITCH
-import com.practicum.playlist_maker.settings.domain.SettingsRepository
+import com.practicum.playlist_maker.settings.domain.api.SettingsRepository
 
 class SettingsRepositoryImpl(private val sharedPreferences: SharedPreferences) :
     SettingsRepository {

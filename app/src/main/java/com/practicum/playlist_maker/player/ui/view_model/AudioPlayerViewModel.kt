@@ -1,12 +1,10 @@
 package com.practicum.playlist_maker.player.ui.view_model
 
-import android.widget.Toast
 import androidx.lifecycle.*
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
-import com.practicum.playlist_maker.mediaLibrary.domain.db.PlaylistFragmentInteractor
-import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentState
+import com.practicum.playlist_maker.mediaLibrary.domain.api.PlaylistFragmentInteractor
 import com.practicum.playlist_maker.player.domain.api.AudioPlayer
-import com.practicum.playlist_maker.player.domain.db.FavoriteTrackInteractor
+import com.practicum.playlist_maker.player.domain.api.FavoriteTrackInteractor
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.player.ui.AddTrackToPlaylistState
 import com.practicum.playlist_maker.player.ui.AudioPlayerPlaylistsState

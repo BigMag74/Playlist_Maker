@@ -2,7 +2,7 @@ package com.practicum.playlist_maker.creationPlaylist.data.impl
 
 import com.google.gson.Gson
 import com.practicum.playlist_maker.creationPlaylist.data.db.entity.PlaylistEntity
-import com.practicum.playlist_maker.creationPlaylist.domain.db.CreationPlaylistRepository
+import com.practicum.playlist_maker.creationPlaylist.domain.api.CreationPlaylistRepository
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 import com.practicum.playlist_maker.player.data.db.AppDatabase
 

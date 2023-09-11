@@ -6,9 +6,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlist_maker.creationPlaylist.data.db.entity.PlaylistEntity
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
-import com.practicum.playlist_maker.mediaLibrary.domain.db.PlaylistFragmentRepository
+import com.practicum.playlist_maker.mediaLibrary.domain.api.PlaylistFragmentRepository
 import com.practicum.playlist_maker.player.data.db.AppDatabase
-import com.practicum.playlist_maker.player.data.db.entity.FavoriteTrackEntity
 import com.practicum.playlist_maker.player.data.db.entity.TrackInPlaylistsEntity
 import com.practicum.playlist_maker.player.domain.model.Track
 import kotlinx.coroutines.flow.Flow
@@ -29,9 +28,8 @@ class PlaylistFragmentRepositoryImpl(private val appDatabase: AppDatabase) :
 
     override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist) {
         playlist.trackIds.add(track.trackId)
-        playlist.countOfTracks++
-        //appDatabase.playlistDao().insertPlaylist(convertFromPlaylistToPlaylistEntity(playlist))
-        appDatabase.playlistDao().updatePlaylist(convertFromPlaylistToPlaylistEntity(playlist))
+        appDatabase.playlistDao()
+            .updatePlaylist(convertFromPlaylistToPlaylistEntity(playlist.copy(countOfTracks = playlist.countOfTracks + 1)))
 
         Log.e("MyTag", playlist.id.toString())
 

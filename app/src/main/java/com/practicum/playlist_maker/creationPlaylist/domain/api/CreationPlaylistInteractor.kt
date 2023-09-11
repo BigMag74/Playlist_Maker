@@ -1,4 +1,4 @@
-package com.practicum.playlist_maker.creationPlaylist.domain.db
+package com.practicum.playlist_maker.creationPlaylist.domain.api
 
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 

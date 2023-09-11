@@ -20,7 +20,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.practicum.playlist_maker.R
-import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 import com.practicum.playlist_maker.databinding.AudioPlayerFragmentBinding
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.player.ui.AddTrackToPlaylistState
@@ -104,7 +103,6 @@ class AudioPlayerFragment : Fragment() {
         recyclerView?.adapter = playlistAdapter
     }
 
-
     override fun onResume() {
         super.onResume()
         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
@@ -153,7 +151,6 @@ class AudioPlayerFragment : Fragment() {
         })
     }
 
-
     private fun initialize(track: Track) {
         trackIcon = binding.trackIcon
         trackName = binding.trackName
@@ -190,8 +187,6 @@ class AudioPlayerFragment : Fragment() {
         likeButton?.setOnClickListener {
             audioPlayerViewModel.onFavoriteClicked()
         }
-
-
     }
 
     private fun initializeIcon() {
@@ -298,7 +293,6 @@ class AudioPlayerFragment : Fragment() {
         likeButton?.setImageResource(R.drawable.like_button_pressed)
         likeButton?.imageTintList = ColorStateList.valueOf(resources.getColor(R.color.red_light))
     }
-
 
     companion object {
         private const val SINGLE = "Single"

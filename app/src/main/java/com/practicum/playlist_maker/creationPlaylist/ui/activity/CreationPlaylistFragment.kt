@@ -94,6 +94,11 @@ class CreationPlaylistFragment : Fragment() {
         setOnClickListeners()
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
+            View.GONE
+    }
 
     override fun onStop() {
         super.onStop()

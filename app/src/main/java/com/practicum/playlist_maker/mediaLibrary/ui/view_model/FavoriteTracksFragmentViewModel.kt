@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist_maker.mediaLibrary.ui.FavoriteScreenState
-import com.practicum.playlist_maker.player.domain.db.FavoriteTrackInteractor
+import com.practicum.playlist_maker.player.domain.api.FavoriteTrackInteractor
 import com.practicum.playlist_maker.player.domain.model.Track
 import kotlinx.coroutines.launch
 

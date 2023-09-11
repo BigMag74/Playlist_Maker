@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practicum.playlist_maker.creationPlaylist.ui.CreationPlaylistState
-import com.practicum.playlist_maker.mediaLibrary.domain.db.PlaylistFragmentInteractor
+import com.practicum.playlist_maker.mediaLibrary.domain.api.PlaylistFragmentInteractor
 import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentState
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PlaylistFragmentViewModel(private val interactor: PlaylistFragmentInteractor) : ViewModel() {
