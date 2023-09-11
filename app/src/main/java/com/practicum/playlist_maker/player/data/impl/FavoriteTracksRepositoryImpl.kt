@@ -1,8 +1,8 @@
 package com.practicum.playlist_maker.player.data.impl
 
 import com.practicum.playlist_maker.player.data.db.AppDatabase
-import com.practicum.playlist_maker.player.data.db.entity.TrackEntity
-import com.practicum.playlist_maker.player.domain.db.FavoriteTracksRepository
+import com.practicum.playlist_maker.player.data.db.entity.FavoriteTrackEntity
+import com.practicum.playlist_maker.player.domain.api.FavoriteTracksRepository
 import com.practicum.playlist_maker.player.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,25 +13,25 @@ class FavoriteTracksRepositoryImpl(
     private val appDatabase: AppDatabase,
 ) : FavoriteTracksRepository {
     override suspend fun addTrackToFavorite(track: Track) {
-        appDatabase.trackDao().insertTrack(convertFromTrackToTrackEntity(track))
+        appDatabase.favoriteTrackDao().insertTrack(convertFromTrackToTrackEntity(track))
     }
 
     override suspend fun deleteTrackFromFavorite(track: Track) {
-        appDatabase.trackDao().deleteTrack(convertFromTrackToTrackEntity(track))
+        appDatabase.favoriteTrackDao().deleteTrack(convertFromTrackToTrackEntity(track))
     }
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
-        val favoriteTracks = appDatabase.trackDao().getTracks()
+        val favoriteTracks = appDatabase.favoriteTrackDao().getTracks()
         emit(convertFromTrackEntitiesToTracks(favoriteTracks))
     }
 
     override fun getFavoriteTrackIds(): Flow<List<Int>> = flow {
-        val favoriteTrackIds = appDatabase.trackDao().getTracksId()
+        val favoriteTrackIds = appDatabase.favoriteTrackDao().getTracksId()
         emit(favoriteTrackIds)
     }
 
-    private fun convertFromTrackToTrackEntity(track: Track): TrackEntity {
-        return TrackEntity(
+    private fun convertFromTrackToTrackEntity(track: Track): FavoriteTrackEntity {
+        return FavoriteTrackEntity(
             track.trackName,
             track.artistName,
             track.trackTimeMillis,
@@ -47,7 +47,7 @@ class FavoriteTracksRepositoryImpl(
 
     }
 
-    private fun convertFromTrackEntitiesToTracks(tracks: List<TrackEntity>): List<Track> {
+    private fun convertFromTrackEntitiesToTracks(tracks: List<FavoriteTrackEntity>): List<Track> {
         return tracks.map { track ->
             Track(
                 track.trackName,

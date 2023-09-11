@@ -32,5 +32,17 @@
     <string name="there_is_no_app_on_the_device_to_make_this_request">На устройстве нет приложения для выполнения этого запроса</string>
     <string name="there_is_no_app_on_the_device_to_send_email">На устройстве нет приложения для отправки почты</string>
     <string name="there_is_no_browser_on_the_device">На устройстве отсутствует браузер</string>
+    <string name="name_with_star">Название*</string>
+    <string name="description">Описание</string>
+    <string name="create">Создать</string>
+    <string name="finish_creating_a_playlist">Завершить создание плейлиста?</string>
+    <string name="cancel">Отмена</string>
+    <string name="finish">Завершить</string>
+    <string name="playlist">Плейлист</string>
+    <string name="created">создан</string>
+    <string name="tracks">треков</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="track_has_already_been_added_to_the_playlist">Трек уже добавлен в плейлист:</string>
+    <string name="added_to_playlist">Добавлено в плейлист:</string>
 
 </resources>

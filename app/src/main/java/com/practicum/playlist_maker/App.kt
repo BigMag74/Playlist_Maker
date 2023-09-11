@@ -1,7 +1,9 @@
 package com.practicum.playlist_maker
 
 import android.app.Application
+import com.practicum.playlist_maker.creationPlaylist.di.creationPlaylistModule
 import com.practicum.playlist_maker.mediaLibrary.di.mediaLibraryModule
+import com.practicum.playlist_maker.mediaLibrary.di.playlistFragmentModule
 import com.practicum.playlist_maker.player.di.audioPlayerDataModule
 import com.practicum.playlist_maker.player.di.audioPlayerModule
 import com.practicum.playlist_maker.player.di.audioPlayerViewModelModule
@@ -13,7 +15,7 @@ import com.practicum.playlist_maker.search.di.searchViewModelModule
 import com.practicum.playlist_maker.settings.di.settingsInteractorModule
 import com.practicum.playlist_maker.settings.di.settingsRepositoryModule
 import com.practicum.playlist_maker.settings.di.settingsViewModelModule
-import com.practicum.playlist_maker.settings.domain.SettingsInteractor
+import com.practicum.playlist_maker.settings.domain.api.SettingsInteractor
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -40,6 +42,8 @@ class App : Application() {
                 settingsRepositoryModule,
                 settingsViewModelModule,
                 mediaLibraryModule,
+                creationPlaylistModule,
+                playlistFragmentModule,
             )
 
         }

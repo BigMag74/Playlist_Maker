@@ -120,6 +120,7 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
 
     fun clearSearchHistory() {
         tracksInteractor.clearSearchHistory()
+        renderState(SearchState.SearchHistory(null))
     }
 
 

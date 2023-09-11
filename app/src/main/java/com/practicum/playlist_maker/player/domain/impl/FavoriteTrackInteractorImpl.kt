@@ -1,10 +1,9 @@
 package com.practicum.playlist_maker.player.domain.impl
 
-import com.practicum.playlist_maker.player.domain.db.FavoriteTrackInteractor
-import com.practicum.playlist_maker.player.domain.db.FavoriteTracksRepository
+import com.practicum.playlist_maker.player.domain.api.FavoriteTrackInteractor
+import com.practicum.playlist_maker.player.domain.api.FavoriteTracksRepository
 import com.practicum.playlist_maker.player.domain.model.Track
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 
 class FavoriteTrackInteractorImpl(private val favoriteTracksRepository: FavoriteTracksRepository) :
@@ -22,7 +21,7 @@ class FavoriteTrackInteractorImpl(private val favoriteTracksRepository: Favorite
         return favoriteTracksRepository.getFavoriteTracks()
     }
 
-    override fun getFavoriteTrackIds(): Flow<List<Int>>{
+    override fun getFavoriteTrackIds(): Flow<List<Int>> {
         return favoriteTracksRepository.getFavoriteTrackIds()
     }
 }

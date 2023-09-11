@@ -1,7 +1,7 @@
 package com.practicum.playlist_maker.settings.ui.view_model
 
 import androidx.lifecycle.ViewModel
-import com.practicum.playlist_maker.settings.domain.SettingsInteractor
+import com.practicum.playlist_maker.settings.domain.api.SettingsInteractor
 
 
 class SettingsViewModel(private val interactor: SettingsInteractor) : ViewModel() {

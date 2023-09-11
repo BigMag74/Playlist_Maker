@@ -3,10 +3,36 @@ package com.practicum.playlist_maker.mediaLibrary.ui.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.practicum.playlist_maker.mediaLibrary.domain.api.PlaylistFragmentInteractor
+import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentState
+import kotlinx.coroutines.launch
 
-class PlaylistFragmentViewModel : ViewModel() {
+class PlaylistFragmentViewModel(private val interactor: PlaylistFragmentInteractor) : ViewModel() {
 
-    private val liveData = MutableLiveData(true)
-    fun observe(): LiveData<Boolean> = liveData
+    private var _state = MutableLiveData<PlaylistFragmentState>()
+    val state: LiveData<PlaylistFragmentState> = _state
+
+    init {
+        loadPlaylists()
+    }
+
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            interactor.getPlaylists().collect() { playlists ->
+                if(playlists.isEmpty()){
+                    setState(PlaylistFragmentState.EmptyPlaylists())
+                }
+                else{
+                    setState(PlaylistFragmentState.ContentPlaylists(playlists))
+                }
+            }
+        }
+    }
+
+
+    private fun setState(state: PlaylistFragmentState) {
+        _state.postValue(state)
+    }
 
 }
