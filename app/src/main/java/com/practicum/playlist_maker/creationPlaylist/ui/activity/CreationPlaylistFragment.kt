@@ -132,17 +132,6 @@ class CreationPlaylistFragment : Fragment() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            val sourceTreeUri = data?.data
-            context?.contentResolver?.takePersistableUriPermission(
-                sourceTreeUri!!,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            )
-        }
-    }
-
     private fun setOnClickListeners() {
 
         val pickMedia =
