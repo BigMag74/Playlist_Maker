@@ -1,7 +1,6 @@
 package com.practicum.playlist_maker.mediaLibrary.data.impl
 
 import android.net.Uri
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlist_maker.creationPlaylist.data.db.entity.PlaylistEntity
@@ -30,8 +29,6 @@ class PlaylistFragmentRepositoryImpl(private val appDatabase: AppDatabase) :
         playlist.trackIds.add(track.trackId)
         appDatabase.playlistDao()
             .updatePlaylist(convertFromPlaylistToPlaylistEntity(playlist.copy(countOfTracks = playlist.countOfTracks + 1)))
-
-        Log.e("MyTag", playlist.id.toString())
 
         appDatabase.trackInPlaylistDao()
             .insertTrack(convertFromTrackToTrackInPlaylistsEntity(track))
