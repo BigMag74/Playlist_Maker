@@ -20,7 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.practicum.playlist_maker.R
-import com.practicum.playlist_maker.databinding.AudioPlayerFragmentBinding
+import com.practicum.playlist_maker.databinding.FragmentAudioPlayerBinding
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.player.ui.AddTrackToPlaylistState
 import com.practicum.playlist_maker.player.ui.AudioPlayerAdapter
@@ -61,7 +61,7 @@ class AudioPlayerFragment : Fragment() {
     private lateinit var track: Track
     private val audioPlayerViewModel: AudioPlayerViewModel by viewModel { parametersOf(track) }
 
-    private var _binding: AudioPlayerFragmentBinding? = null
+    private var _binding: FragmentAudioPlayerBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -69,7 +69,7 @@ class AudioPlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = AudioPlayerFragmentBinding.inflate(inflater, container, false)
+        _binding = FragmentAudioPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
 

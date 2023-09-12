@@ -37,8 +37,6 @@ class FavoriteTracksFragment : Fragment() {
     private var _binding: FragmentFavoriteTracksBinding? = null
     private val binding get() = _binding!!
 
-    private var isClickAllowed = true
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -102,7 +100,6 @@ class FavoriteTracksFragment : Fragment() {
     companion object {
         fun newInstance() = FavoriteTracksFragment()
         const val TRACK = "TRACK"
-        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
 }

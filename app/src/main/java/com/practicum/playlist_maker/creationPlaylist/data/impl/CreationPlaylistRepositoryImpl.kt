@@ -1,10 +1,13 @@
 package com.practicum.playlist_maker.creationPlaylist.data.impl
 
+import android.net.Uri
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.practicum.playlist_maker.creationPlaylist.data.db.entity.PlaylistEntity
 import com.practicum.playlist_maker.creationPlaylist.domain.api.CreationPlaylistRepository
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 import com.practicum.playlist_maker.player.data.db.AppDatabase
+import java.lang.reflect.Type
 
 
 class CreationPlaylistRepositoryImpl(private val appDatabase: AppDatabase) :
@@ -12,6 +15,10 @@ class CreationPlaylistRepositoryImpl(private val appDatabase: AppDatabase) :
 
     override suspend fun addPlaylist(playlist: Playlist) {
         appDatabase.playlistDao().insertPlaylist(convertFromPlaylistToPlaylistEntity(playlist))
+    }
+
+    override suspend fun getPlaylistById(id: Int): Playlist {
+        return convertFromPlaylistEntityToPlaylist(appDatabase.playlistDao().getPlaylistById(id))
     }
 
     private fun convertFromPlaylistToPlaylistEntity(playlist: Playlist): PlaylistEntity {
@@ -22,6 +29,18 @@ class CreationPlaylistRepositoryImpl(private val appDatabase: AppDatabase) :
             path = playlist.pathUri.toString(),
             trackIds = Gson().toJson(playlist.trackIds),
             countOfTracks = playlist.countOfTracks,
+        )
+    }
+
+    private fun convertFromPlaylistEntityToPlaylist(playlistEntity: PlaylistEntity): Playlist {
+        val type: Type = object : TypeToken<MutableList<Int?>?>() {}.type
+        return Playlist(
+            id = playlistEntity.id,
+            name = playlistEntity.name,
+            description = playlistEntity.description,
+            pathUri = Uri.parse(playlistEntity.path),
+            trackIds = Gson().fromJson(playlistEntity.trackIds, type),
+            countOfTracks = playlistEntity.countOfTracks,
         )
     }
 

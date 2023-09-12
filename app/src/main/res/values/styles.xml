@@ -123,5 +123,11 @@
         <item name="colorPrimary">@color/blue</item>
     </style>
 
+    <style name="fragment_playlist_textview_style">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 
 </resources>

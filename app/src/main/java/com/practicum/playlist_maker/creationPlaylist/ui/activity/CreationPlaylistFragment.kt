@@ -94,6 +94,17 @@ class CreationPlaylistFragment : Fragment() {
         setOnClickListeners()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            val sourceTreeUri = data?.data
+            context?.contentResolver?.takePersistableUriPermission(
+                sourceTreeUri!!,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =

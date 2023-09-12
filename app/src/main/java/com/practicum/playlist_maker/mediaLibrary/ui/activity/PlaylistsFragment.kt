@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.databinding.FragmentPlaylistsBinding
 import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentAdapter
@@ -51,6 +52,14 @@ class PlaylistsFragment : Fragment() {
         recyclerView = binding.playlistsRecyclerView
 
         playlistAdapter = PlaylistFragmentAdapter()
+        playlistAdapter?.onPlayListClicked = {
+            val bundle = Bundle()
+            bundle.putString(PLAYLIST, Gson().toJson(it))
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment_to_playlistFragment,
+                bundle
+            )
+        }
         recyclerView?.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView?.adapter = playlistAdapter
 
@@ -89,6 +98,7 @@ class PlaylistsFragment : Fragment() {
 
     companion object {
         fun newInstance() = PlaylistsFragment()
+        const val PLAYLIST = "playlist"
     }
 
 }
