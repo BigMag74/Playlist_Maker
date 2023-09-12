@@ -17,6 +17,8 @@ class TrackViewHolder(itemView: View, private val clickListener: TracksClickList
     private val trackTime: TextView = itemView.findViewById(R.id.trackTime)
     private val trackIcon: ImageView = itemView.findViewById(R.id.trackIcon)
 
+    var onLongClickListener: ((track: Track) -> Unit)? = null
+
 
     fun bind(model: Track) {
         trackTitle.text = model.trackName
@@ -31,6 +33,10 @@ class TrackViewHolder(itemView: View, private val clickListener: TracksClickList
             .into(trackIcon)
 
         itemView.setOnClickListener { clickListener.onTrackClick(model) }
+        itemView.setOnLongClickListener {
+            onLongClickListener?.invoke(model)
+            true
+        }
 
     }
 }

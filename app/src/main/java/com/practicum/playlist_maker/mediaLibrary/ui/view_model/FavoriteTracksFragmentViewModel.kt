@@ -6,13 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlist_maker.mediaLibrary.ui.FavoriteScreenState
 import com.practicum.playlist_maker.player.domain.api.FavoriteTrackInteractor
-import com.practicum.playlist_maker.player.domain.model.Track
 import kotlinx.coroutines.launch
 
 class FavoriteTracksFragmentViewModel(private val favoriteTrackInteractor: FavoriteTrackInteractor) :
     ViewModel() {
 
-    private var tracks: List<Track> = emptyList()
     private val _state = MutableLiveData<FavoriteScreenState>()
     val state: LiveData<FavoriteScreenState> = _state
 

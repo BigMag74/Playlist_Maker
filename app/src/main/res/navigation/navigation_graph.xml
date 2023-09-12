@@ -53,5 +53,9 @@
         android:id="@+id/playlistFragment"
         android:name="com.practicum.playlist_maker.playlist.ui.activity.PlaylistScreenFragment"
         android:label="fragment_playlist"
-        tools:layout="@layout/fragment_playlist_screen" />
+        tools:layout="@layout/fragment_playlist_screen" >
+        <action
+            android:id="@+id/action_playlistFragment_to_audioPlayerActivity"
+            app:destination="@id/audioPlayerActivity" />
+    </fragment>
 </navigation>

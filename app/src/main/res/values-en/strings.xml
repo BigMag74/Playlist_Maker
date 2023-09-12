@@ -44,5 +44,9 @@
     <string name="add_to_playlist">Add to playlist</string>
     <string name="track_has_already_been_added_to_the_playlist">Track has already been added to the playlist:</string>
     <string name="added_to_playlist">Added to playlist:</string>
+    <string name="minutes">minutes</string>
+    <string name="do_you_want_to_delete_track">Do you want to delete this track?</string>
+    <string name="yes_caps">YES</string>
+    <string name="no_caps">NO</string>
 
 </resources>

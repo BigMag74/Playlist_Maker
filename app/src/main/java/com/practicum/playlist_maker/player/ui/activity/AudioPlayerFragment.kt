@@ -1,5 +1,7 @@
 package com.practicum.playlist_maker.player.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -113,6 +115,17 @@ class AudioPlayerFragment : Fragment() {
         super.onStop()
         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
             View.VISIBLE
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            val sourceTreeUri = data?.data
+            context?.contentResolver?.takePersistableUriPermission(
+                sourceTreeUri!!,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+        }
     }
 
     private fun setOnClickListeners() {

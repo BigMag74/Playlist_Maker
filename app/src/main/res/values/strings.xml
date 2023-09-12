@@ -44,5 +44,9 @@
     <string name="add_to_playlist">Добавить в плейлист</string>
     <string name="track_has_already_been_added_to_the_playlist">Трек уже добавлен в плейлист:</string>
     <string name="added_to_playlist">Добавлено в плейлист:</string>
+    <string name="minutes">минут</string>
+    <string name="do_you_want_to_delete_track">Хотите удалить трек?</string>
+    <string name="yes_caps">ДА</string>
+    <string name="no_caps">НЕТ</string>
 
 </resources>
