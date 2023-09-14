@@ -17,6 +17,7 @@ import com.practicum.playlist_maker.databinding.FragmentPlaylistsBinding
 import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentAdapter
 import com.practicum.playlist_maker.mediaLibrary.ui.PlaylistFragmentState
 import com.practicum.playlist_maker.mediaLibrary.ui.view_model.PlaylistFragmentViewModel
+import com.practicum.playlist_maker.playlist.ui.activity.PlaylistScreenFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {

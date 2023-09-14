@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
@@ -23,15 +24,21 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.gson.Gson
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 import com.practicum.playlist_maker.creationPlaylist.ui.CreationPlaylistState
+import com.practicum.playlist_maker.creationPlaylist.ui.EditPlaylistState
 import com.practicum.playlist_maker.creationPlaylist.ui.view_model.CreationPlaylistViewModel
 import com.practicum.playlist_maker.databinding.FragmentCreatePlaylistBinding
+import com.practicum.playlist_maker.playlist.ui.activity.PlaylistScreenFragment.Companion.PLAYLIST
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.io.File
 import java.io.FileOutputStream
 
@@ -39,9 +46,14 @@ class CreationPlaylistFragment : Fragment() {
 
     private var _binding: FragmentCreatePlaylistBinding? = null
     private val binding get() = _binding!!
-    private val creationPlaylistViewModel: CreationPlaylistViewModel by viewModel()
+    private val creationPlaylistViewModel: CreationPlaylistViewModel by viewModel {
+        parametersOf(
+            playlist
+        )
+    }
 
     private var backButton: ImageView? = null
+    private var title: TextView? = null
     private var playlistImage: ShapeableImageView? = null
     private var playlistName: EditText? = null
     private var playlistDescription: EditText? = null
@@ -51,7 +63,9 @@ class CreationPlaylistFragment : Fragment() {
 
     private var dialog: MaterialAlertDialogBuilder? = null
 
-    private var imageUri: Uri? = null
+    private var playlist: Playlist? = null
+
+    private var imageUri: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,14 +77,21 @@ class CreationPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        playlist = Gson().fromJson(arguments?.getString(PLAYLIST), Playlist::class.java)
+
         backButton = binding.backButton
+        title = binding.titleTextView
         playlistImage = binding.addPhotoImageView
         playlistName = binding.playlistNameEditText
         playlistDescription = binding.descriptionEditText
         createButton = binding.createNewPlaylistButton
 
-        creationPlaylistViewModel.state.observe(viewLifecycleOwner) {
-            render(it)
+        creationPlaylistViewModel.creationState.observe(viewLifecycleOwner) {
+            renderCreationPlaylist(it)
+        }
+        creationPlaylistViewModel.editState.observe(viewLifecycleOwner) {
+            renderEditPlaylist(it)
         }
 
         isImageChanged = false
@@ -120,12 +141,14 @@ class CreationPlaylistFragment : Fragment() {
     private val callback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (isImageChanged || playlistName?.text?.isNotEmpty() == true || playlistDescription?.text?.isNotEmpty() == true) {
-                    dialog?.show()
-                } else {
+                if (playlist == null) {
+                    if (isImageChanged || playlistName?.text?.isNotEmpty() == true || playlistDescription?.text?.isNotEmpty() == true) {
+                        dialog?.show()
+                    } else {
+                        findNavController().navigateUp()
+                    }
+                } else
                     findNavController().navigateUp()
-                }
-
             }
         }
 
@@ -134,9 +157,9 @@ class CreationPlaylistFragment : Fragment() {
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             if (p0.isNullOrEmpty())
-                render(CreationPlaylistState.EmptyName())
+                renderCreationPlaylist(CreationPlaylistState.EmptyName())
             else
-                render(CreationPlaylistState.ContentName())
+                renderCreationPlaylist(CreationPlaylistState.ContentName())
         }
 
         override fun afterTextChanged(p0: Editable?) {}
@@ -148,8 +171,14 @@ class CreationPlaylistFragment : Fragment() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
-                    playlistImage?.setImageURI(uri)
-                    imageUri = uri
+                    playlistImage?.let {
+                        Glide.with(it)
+                            .load(uri)
+                            .placeholder(R.drawable.album)
+                            .centerCrop()
+                            .into(playlistImage!!)
+                    }
+                    imageUri = uri.toString()
                     isImageChanged = true
                 } else {
                     Log.d("PhotoPicker", "No media selected")
@@ -160,27 +189,43 @@ class CreationPlaylistFragment : Fragment() {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        backButton?.setOnClickListener { showDialogBeforeExit() }
+        backButton?.setOnClickListener {
+            if (playlist == null)
+                showDialogBeforeExit()
+            else
+                findNavController().navigateUp()
+        }
 
         playlistName?.addTextChangedListener(textWatcher)
 
         createButton?.setOnClickListener {
-            imageUri?.let { it1 -> saveImageToPrivateStorage(it1) }
-            creationPlaylistViewModel.savePlaylist(
-                Playlist(
-                    name = playlistName!!.text.toString().trim(),
-                    description = playlistDescription?.text.toString().trim(),
-                    pathUri = imageUri,
-                    trackIds = mutableListOf(),
-                    countOfTracks = 0
+            if (playlist == null) {
+                imageUri?.let { it1 -> saveImageToPrivateStorage(Uri.parse(it1)) }
+                creationPlaylistViewModel.savePlaylist(
+                    Playlist(
+                        name = playlistName!!.text.toString().trim(),
+                        description = playlistDescription?.text.toString().trim(),
+                        pathUri = imageUri,
+                        trackIds = mutableListOf(),
+                        countOfTracks = 0
+                    )
                 )
-            )
-            Toast.makeText(
-                requireContext(),
-                "${getString(R.string.playlist)} ${playlistName?.text} ${getString(R.string.created)}.",
-                Toast.LENGTH_LONG
-            ).show()
-            findNavController().navigateUp()
+                Toast.makeText(
+                    requireContext(),
+                    "${getString(R.string.playlist)} ${playlistName?.text} ${getString(R.string.created)}.",
+                    Toast.LENGTH_LONG
+                ).show()
+                findNavController().navigateUp()
+            } else {
+                creationPlaylistViewModel.updatePlaylist(
+                    playlist!!.copy(
+                        name = playlistName!!.text.toString().trim(),
+                        description = playlistDescription?.text.toString().trim(),
+                        pathUri = imageUri,
+                    )
+                )
+                findNavController().navigateUp()
+            }
         }
 
     }
@@ -204,17 +249,43 @@ class CreationPlaylistFragment : Fragment() {
         if (isImageChanged || playlistName?.text?.isNotEmpty() == true || playlistDescription?.text?.isNotEmpty() == true) {
             dialog?.show()
         } else {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
         }
     }
 
-    private fun render(state: CreationPlaylistState) {
+    private fun renderCreationPlaylist(state: CreationPlaylistState) {
         when (state) {
             is CreationPlaylistState.EmptyName -> {
                 createButton?.isEnabled = false
             }
             is CreationPlaylistState.ContentName -> {
                 createButton?.isEnabled = true
+            }
+        }
+    }
+
+    private fun renderEditPlaylist(state: EditPlaylistState) {
+        when (state) {
+            is EditPlaylistState.EmptyName -> {
+                createButton?.isEnabled = false
+            }
+            is EditPlaylistState.ContentName -> {
+                createButton?.isEnabled = true
+            }
+            is EditPlaylistState.JustOpened -> {
+                createButton?.isEnabled = true
+                createButton?.text = getString(R.string.save)
+                title?.text = getString(R.string.edit)
+                playlistName?.setText(state.playlist.name)
+                playlistDescription?.setText(state.playlist.description)
+                playlistImage?.let {
+                    Glide.with(it)
+                        .load(state.playlist.pathUri)
+                        .placeholder(R.drawable.album)
+                        .centerCrop()
+                        .into(playlistImage!!)
+                }
+
             }
         }
     }

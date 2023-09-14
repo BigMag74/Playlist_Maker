@@ -120,12 +120,33 @@
         app:behavior_peekHeight="80dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <View
+            android:layout_marginTop="8dp"
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:background="@drawable/slide_bar_rectangle">
+        </View>
+
+        <TextView
+            android:id="@+id/tracksPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/common_padding"
+            android:layout_marginBottom="@dimen/common_padding"
+            android:fontFamily="@font/ys_display_regular"
+            android:text="@string/playlist_empty"
+            android:textColor="@color/black_and_white"
+            android:textSize="@dimen/text_size_big"
+            android:visibility="gone" />
+
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="@dimen/common_padding"
             android:id="@+id/bottomSheetRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/common_padding"
-            android:layout_marginEnd="@dimen/common_padding"
+            android:layout_marginBottom="@dimen/common_padding"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>
@@ -146,10 +167,18 @@
         app:behavior_hideable="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <View
+            android:layout_marginTop="8dp"
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:background="@drawable/slide_bar_rectangle">
+        </View>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <ImageView

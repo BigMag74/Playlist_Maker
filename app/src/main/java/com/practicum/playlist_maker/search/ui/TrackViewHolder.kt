@@ -26,10 +26,10 @@ class TrackViewHolder(itemView: View, private val clickListener: TracksClickList
         trackTime.text = DateTimeUtil.msecToMMSS(model.trackTimeMillis)
 
         Glide.with(itemView)
-            .load(model.artworkUrl100)
+            .load(model.artworkUrl60)
             .placeholder(R.drawable.album)
             .centerCrop()
-            .transform(RoundedCorners(10))
+            .transform(RoundedCorners(2))
             .into(trackIcon)
 
         itemView.setOnClickListener { clickListener.onTrackClick(model) }

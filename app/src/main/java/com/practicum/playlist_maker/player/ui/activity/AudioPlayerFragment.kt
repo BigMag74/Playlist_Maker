@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,10 +25,7 @@ import com.google.gson.Gson
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.databinding.FragmentAudioPlayerBinding
 import com.practicum.playlist_maker.player.domain.model.Track
-import com.practicum.playlist_maker.player.ui.AddTrackToPlaylistState
-import com.practicum.playlist_maker.player.ui.AudioPlayerAdapter
-import com.practicum.playlist_maker.player.ui.AudioPlayerPlaylistsState
-import com.practicum.playlist_maker.player.ui.AudioPlayerState
+import com.practicum.playlist_maker.player.ui.*
 import com.practicum.playlist_maker.player.ui.view_model.AudioPlayerViewModel
 import com.practicum.playlist_maker.search.ui.activity.SearchFragment
 import com.practicum.playlist_maker.utils.DateTimeUtil
@@ -96,6 +94,10 @@ class AudioPlayerFragment : Fragment() {
 
         audioPlayerViewModel.addTrackToPlaylistState.observe(viewLifecycleOwner) {
             renderAddTrackToPlaylist(it)
+        }
+
+        audioPlayerViewModel.favoriteButtonState.observe(viewLifecycleOwner) {
+            renderFavoriteButton(it)
         }
 
         playlistAdapter = AudioPlayerAdapter()
@@ -205,7 +207,7 @@ class AudioPlayerFragment : Fragment() {
     private fun initializeIcon() {
         trackIcon?.let {
             Glide.with(it)
-                .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+                .load(track.artworkUrl60.replaceAfterLast('/', "512x512bb.jpg"))
                 .placeholder(R.drawable.album)
                 .centerCrop()
                 .transform(RoundedCorners(8))
@@ -236,7 +238,6 @@ class AudioPlayerFragment : Fragment() {
     private fun render(state: AudioPlayerState) {
         playButton?.isEnabled = state.isPlayButtonEnabled
         playTime?.text = state.progress
-        setLikeImage()
         when (state) {
             is AudioPlayerState.Default, is AudioPlayerState.Prepared, is AudioPlayerState.Paused -> {
                 changePlayButtonImageToPlay()
@@ -281,6 +282,18 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
+    private fun renderFavoriteButton(state: FavoriteButtonState) {
+        when (state) {
+            is FavoriteButtonState.Liked -> {
+                changeLikeButtonImageToRed()
+            }
+            is FavoriteButtonState.UnLiked -> {
+                changeLikeButtonImageToWhite()
+            }
+        }
+
+    }
+
     private fun changePlayButtonImageToPlay() {
         playButton?.setImageResource(R.drawable.play_button)
     }
@@ -289,13 +302,6 @@ class AudioPlayerFragment : Fragment() {
         playButton?.setImageResource(R.drawable.pause_button)
     }
 
-    private fun setLikeImage() {
-        if (track.isFavorite) {
-            changeLikeButtonImageToRed()
-        } else {
-            changeLikeButtonImageToWhite()
-        }
-    }
 
     private fun changeLikeButtonImageToWhite() {
         likeButton?.setImageResource(R.drawable.like_button_not_pressed)

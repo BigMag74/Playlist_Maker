@@ -5,5 +5,6 @@ import com.practicum.playlist_maker.player.domain.model.Track
 
 sealed class PlaylistScreenTracksState {
 
-    class BasedState(val tracks: List<Track>) : PlaylistScreenTracksState()
+    class ContentState(val tracks: List<Track>) : PlaylistScreenTracksState()
+    class EmptyState() : PlaylistScreenTracksState()
 }

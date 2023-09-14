@@ -26,10 +26,6 @@ class PlaylistScreenViewModel(
     private var _tracksState = MutableLiveData<PlaylistScreenTracksState>()
     val tracksState: LiveData<PlaylistScreenTracksState> = _tracksState
 
-    init {
-        loadPlaylist()
-    }
-
     fun loadPlaylist() {
         viewModelScope.launch {
             setState(PlaylistScreenState.BasedState(playlistInteractor.getPlaylistById(playlistId)))
@@ -39,7 +35,10 @@ class PlaylistScreenViewModel(
     fun loadTracks(trackIds: List<Int>) {
         viewModelScope.launch {
             tracksInteractor.getPlaylistTracks(trackIds).collect { tracks ->
-                setTracksState(PlaylistScreenTracksState.BasedState(tracks))
+                if (tracks.isEmpty()) {
+                    setTracksState(PlaylistScreenTracksState.EmptyState())
+                } else
+                    setTracksState(PlaylistScreenTracksState.ContentState(tracks))
             }
         }
     }

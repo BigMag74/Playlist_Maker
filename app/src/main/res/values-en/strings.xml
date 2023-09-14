@@ -41,10 +41,14 @@
     <string name="playlist">Playlist</string>
     <string name="created">created</string>
     <string name="tracks">tracks</string>
+    <string name="tracks_1">tracks</string>
+    <string name="tracks_2">tracks</string>
     <string name="add_to_playlist">Add to playlist</string>
     <string name="track_has_already_been_added_to_the_playlist">Track has already been added to the playlist:</string>
     <string name="added_to_playlist">Added to playlist:</string>
     <string name="minutes">minutes</string>
+    <string name="minutes_1">минута</string>
+    <string name="minutes_2">минуты</string>
     <string name="do_you_want_to_delete_track">Do you want to delete this track?</string>
     <string name="yes_caps">YES</string>
     <string name="no_caps">NO</string>
@@ -53,5 +57,8 @@
     <string name="edit_information">Edit information</string>
     <string name="delete_playlist">Delete playlist</string>
     <string name="do_you_want_to_delete_playlist">Do you want to delete playlist</string>
+    <string name="save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="playlist_empty">Playlist empty</string>
 
 </resources>

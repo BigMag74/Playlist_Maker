@@ -7,4 +7,6 @@ interface CreationPlaylistInteractor {
     suspend fun addPlaylist(playlist: Playlist)
 
     suspend fun getPlaylistById(id: Int): Playlist
+
+    suspend fun updatePlaylist(playlist: Playlist)
 }

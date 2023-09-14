@@ -15,5 +15,9 @@ class CreationPlaylistInteractorImpl(private val creationPlaylistRepository: Cre
         return creationPlaylistRepository.getPlaylistById(id)
     }
 
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        creationPlaylistRepository.updatePlaylist(playlist)
+    }
+
 
 }

@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
-import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -24,7 +22,6 @@ import com.google.gson.Gson
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 import com.practicum.playlist_maker.databinding.FragmentPlaylistScreenBinding
-import com.practicum.playlist_maker.mediaLibrary.ui.activity.PlaylistsFragment.Companion.PLAYLIST
 import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.playlist.ui.PlaylistScreenAdapter
 import com.practicum.playlist_maker.playlist.ui.PlaylistScreenState
@@ -32,6 +29,7 @@ import com.practicum.playlist_maker.playlist.ui.PlaylistScreenTracksState
 import com.practicum.playlist_maker.playlist.ui.view_model.PlaylistScreenViewModel
 import com.practicum.playlist_maker.search.ui.TracksClickListener
 import com.practicum.playlist_maker.search.ui.activity.SearchFragment
+import com.practicum.playlist_maker.utils.DateTimeUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
@@ -57,6 +55,7 @@ class PlaylistScreenFragment : Fragment() {
     private var bottomSheetEditModify: TextView? = null
     private var bottomSheetEditDelete: TextView? = null
     private var overlay: View? = null
+    private var tracksPlaceholder: TextView? = null
 
     private var _binding: FragmentPlaylistScreenBinding? = null
     private val binding get() = _binding!!
@@ -96,6 +95,42 @@ class PlaylistScreenFragment : Fragment() {
             renderTracks(it)
         }
 
+        initialiseViews()
+        setOnClickListeners()
+
+        trackAdapter = PlaylistScreenAdapter(onClickListener)
+        trackAdapter?.onLongClickListener = {
+            dialog = MaterialAlertDialogBuilder(requireContext(), R.style.dialog_style)
+                .setTitle(getString(R.string.do_you_want_to_delete_track))
+                .setNegativeButton(getString(R.string.no_caps)) { _, _ -> }
+                .setPositiveButton(getString(R.string.yes_caps)) { _, _ ->
+                    playlist?.let { it1 -> viewModel.deleteTrackFromPlaylist(it.trackId, it1) }
+                }
+            dialog?.show()
+        }
+        recyclerView?.adapter = trackAdapter
+
+
+
+        behaviorEdit.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        overlay?.visibility = View.GONE
+                    }
+                    else -> {
+                        overlay?.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+
+    }
+
+    private fun initialiseViews() {
         backButton = binding.backButton
         playlistImage = binding.playlistImage
         playlistName = binding.playlistName
@@ -114,67 +149,11 @@ class PlaylistScreenFragment : Fragment() {
         bottomSheetEditModify = binding.bottomSheetEditModify
         bottomSheetEditDelete = binding.bottomSheetEditDelete
         overlay = binding.overlay
+        tracksPlaceholder = binding.tracksPlaceholder
 
         behavior = BottomSheetBehavior.from(bottomSheetContainer!!)
         behaviorEdit = BottomSheetBehavior.from(bottomSheetEditContainer!!)
         behaviorEdit.state = BottomSheetBehavior.STATE_HIDDEN
-
-
-        backButton?.setOnClickListener { findNavController().navigateUp() }
-
-        val onClickListener = object : TracksClickListener {
-            override fun onTrackClick(track: Track) {
-                val bundle = Bundle()
-                bundle.putString(SearchFragment.TRACK, Gson().toJson(track))
-                findNavController().navigate(
-                    R.id.action_playlistFragment_to_audioPlayerActivity,
-                    bundle
-                )
-            }
-        }
-
-        trackAdapter = PlaylistScreenAdapter(onClickListener)
-        trackAdapter?.onLongClickListener = {
-            dialog = MaterialAlertDialogBuilder(requireContext(), R.style.dialog_style)
-                .setTitle(getString(R.string.do_you_want_to_delete_track))
-                .setNegativeButton(getString(R.string.no_caps)) { _, _ -> }
-                .setPositiveButton(getString(R.string.yes_caps)) { _, _ ->
-                    playlist?.let { it1 -> viewModel.deleteTrackFromPlaylist(it.trackId, it1) }
-                }
-            dialog?.show()
-        }
-        recyclerView?.adapter = trackAdapter
-
-        shareButton?.setOnClickListener { onShareClickListener.invoke() }
-
-        optionsButton?.setOnClickListener {
-            bottomSheetEditPlaylistImage?.let {
-                Glide.with(it)
-                    .load(playlist?.pathUri)
-                    .placeholder(R.drawable.album)
-                    .centerCrop()
-                    .into(bottomSheetEditPlaylistImage!!)
-            }
-            bottomSheetEditPlaylistName?.text = playlist?.name
-            bottomSheetEditPlaylistCountOfTracks?.text =
-                "${playlist?.countOfTracks.toString()} ${getString(R.string.tracks)}"
-            behaviorEdit.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
-
-        bottomSheetEditShare?.setOnClickListener { onShareClickListener.invoke() }
-
-        bottomSheetEditDelete?.setOnClickListener {
-            dialogDeletePlaylist =
-                MaterialAlertDialogBuilder(requireContext(), R.style.dialog_style)
-                    .setTitle("${getString(R.string.do_you_want_to_delete_playlist)} «${playlist?.name}»?")
-                    .setNegativeButton(getString(R.string.no_caps)) { _, _ -> }
-                    .setPositiveButton(getString(R.string.yes_caps)) { _, _ ->
-                        playlist?.let { it1 -> viewModel.deletePlaylist(it1) }
-                        findNavController().navigateUp()
-                    }
-            dialogDeletePlaylist?.show()
-        }
-
     }
 
     private val onShareClickListener = {
@@ -201,7 +180,7 @@ class PlaylistScreenFragment : Fragment() {
                         playlist?.description + "\n"
                     } else
                         "") +
-                    "${playlist?.countOfTracks} ${getString(R.string.tracks)}\n" +
+                    "${playlist?.countOfTracks} ${getString(DateTimeUtil.trackWordEndingId(playlist?.countOfTracks!!))}\n" +
                     trackList
 
             intent.putExtra(Intent.EXTRA_TEXT, text)
@@ -213,12 +192,74 @@ class PlaylistScreenFragment : Fragment() {
         }
     }
 
+    private val onClickListener = object : TracksClickListener {
+        override fun onTrackClick(track: Track) {
+            val bundle = Bundle()
+            bundle.putString(SearchFragment.TRACK, Gson().toJson(track))
+            findNavController().navigate(
+                R.id.action_playlistFragment_to_audioPlayerActivity,
+                bundle
+            )
+        }
+    }
+
+    private fun setOnClickListeners() {
+
+        backButton?.setOnClickListener { findNavController().navigateUp() }
+        shareButton?.setOnClickListener { onShareClickListener.invoke() }
+
+        optionsButton?.setOnClickListener {
+            bottomSheetEditPlaylistImage?.let {
+                Glide.with(it)
+                    .load(playlist?.pathUri)
+                    .placeholder(R.drawable.album)
+                    .centerCrop()
+                    .into(bottomSheetEditPlaylistImage!!)
+            }
+            bottomSheetEditPlaylistName?.text = playlist?.name
+            bottomSheetEditPlaylistCountOfTracks?.text =
+                "${playlist?.countOfTracks.toString()} ${
+                    playlist?.countOfTracks?.let { it1 ->
+                        getString(
+                            DateTimeUtil.trackWordEndingId(
+                                it1
+                            )
+                        )
+                    }
+                }"
+            behaviorEdit.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        bottomSheetEditShare?.setOnClickListener { onShareClickListener.invoke() }
+
+        bottomSheetEditDelete?.setOnClickListener {
+            dialogDeletePlaylist =
+                MaterialAlertDialogBuilder(requireContext(), R.style.dialog_style)
+                    .setTitle("${getString(R.string.do_you_want_to_delete_playlist)} «${playlist?.name}»?")
+                    .setNegativeButton(getString(R.string.no_caps)) { _, _ -> }
+                    .setPositiveButton(getString(R.string.yes_caps)) { _, _ ->
+                        playlist?.let { it1 -> viewModel.deletePlaylist(it1) }
+                        findNavController().navigateUp()
+                    }
+            dialogDeletePlaylist?.show()
+        }
+
+        bottomSheetEditModify?.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(PLAYLIST, Gson().toJson(playlist))
+            findNavController().navigate(
+                R.id.action_playlistFragment_to_creationPlaylistFragment,
+                bundle
+            )
+        }
+
+    }
 
     override fun onResume() {
         super.onResume()
         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
             View.GONE
-
+        viewModel.loadPlaylist()
     }
 
     override fun onStop() {
@@ -248,7 +289,7 @@ class PlaylistScreenFragment : Fragment() {
 
     }
 
-    private fun render(state: PlaylistScreenState?) {
+    private fun render(state: PlaylistScreenState) {
         when (state) {
             is PlaylistScreenState.BasedState -> {
                 playlist = state.playlist
@@ -268,31 +309,45 @@ class PlaylistScreenFragment : Fragment() {
 
                 }
                 playlistCountOfTracks?.text =
-                    "${playlist?.countOfTracks.toString()} ${getString(R.string.tracks)}"
+                    "${playlist?.countOfTracks.toString()} ${
+                        playlist?.countOfTracks?.let { it1 ->
+                            getString(
+                                DateTimeUtil.trackWordEndingId(
+                                    it1
+                                )
+                            )
+                        }
+                    }"
 
                 viewModel.loadTracks(playlist?.trackIds as List<Int>)
                 trackIds = playlist?.trackIds
             }
-            else -> {}
         }
     }
 
-    private fun renderTracks(state: PlaylistScreenTracksState?) {
+    private fun renderTracks(state: PlaylistScreenTracksState) {
         when (state) {
-            is PlaylistScreenTracksState.BasedState -> {
+            is PlaylistScreenTracksState.ContentState -> {
                 trackAdapter?.tracks?.clear()
                 trackAdapter?.tracks?.addAll(state.tracks)
                 trackAdapter?.notifyDataSetChanged()
-                playlistTime?.text = "${
-                    SimpleDateFormat(
-                        "mm",
-                        Locale.getDefault()
-                    ).format(viewModel.calculatePlaylistTime(state.tracks))
-                } ${getString(R.string.minutes)}"
-                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
+                val minutes = SimpleDateFormat(
+                    "mm",
+                    Locale.getDefault()
+                ).format(viewModel.calculatePlaylistTime(state.tracks))
+                playlistTime?.text =
+                    "$minutes ${getString(DateTimeUtil.minuteWordEndingId(minutes.toInt()))}"
+                tracksPlaceholder?.visibility = View.GONE
+                recyclerView?.visibility = View.VISIBLE
             }
-            else -> {}
+            is PlaylistScreenTracksState.EmptyState -> {
+                recyclerView?.visibility = View.GONE
+                tracksPlaceholder?.visibility = View.VISIBLE
+            }
         }
+    }
+
+    companion object {
+        const val PLAYLIST = "playlist"
     }
 }

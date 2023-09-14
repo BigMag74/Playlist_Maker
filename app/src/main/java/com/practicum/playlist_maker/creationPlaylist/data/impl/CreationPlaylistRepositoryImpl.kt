@@ -21,6 +21,10 @@ class CreationPlaylistRepositoryImpl(private val appDatabase: AppDatabase) :
         return convertFromPlaylistEntityToPlaylist(appDatabase.playlistDao().getPlaylistById(id))
     }
 
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        appDatabase.playlistDao().updatePlaylist(convertFromPlaylistToPlaylistEntity(playlist))
+    }
+
     private fun convertFromPlaylistToPlaylistEntity(playlist: Playlist): PlaylistEntity {
         return PlaylistEntity(
             id = playlist.id,
@@ -38,7 +42,7 @@ class CreationPlaylistRepositoryImpl(private val appDatabase: AppDatabase) :
             id = playlistEntity.id,
             name = playlistEntity.name,
             description = playlistEntity.description,
-            pathUri = Uri.parse(playlistEntity.path),
+            pathUri = playlistEntity.path,
             trackIds = Gson().fromJson(playlistEntity.trackIds, type),
             countOfTracks = playlistEntity.countOfTracks,
         )

@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/newPlaylistTextView"
+        android:id="@+id/titleTextView"
         style="@style/headerTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         android:src="@drawable/add_playlist_image_placeholder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newPlaylistTextView"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView"
         app:shapeAppearanceOverlay="@style/rounded_image_view" />
 
 

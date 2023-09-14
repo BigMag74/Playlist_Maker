@@ -35,7 +35,7 @@ class FavoriteTracksRepositoryImpl(
             track.trackName,
             track.artistName,
             track.trackTimeMillis,
-            track.artworkUrl100,
+            track.artworkUrl60,
             track.trackId,
             track.collectionName,
             track.releaseDate,
