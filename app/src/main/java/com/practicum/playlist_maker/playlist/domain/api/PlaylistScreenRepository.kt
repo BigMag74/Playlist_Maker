@@ -8,4 +8,5 @@ interface PlaylistScreenRepository {
 
     fun getPlaylistTracks(trackIds: List<Int>): Flow<List<Track>>
     suspend fun deleteTrackFromPlaylist(trackId: Int, playlist: Playlist)
+    suspend fun deletePlaylist(playlist: Playlist)
 }

@@ -168,8 +168,8 @@ class CreationPlaylistFragment : Fragment() {
             imageUri?.let { it1 -> saveImageToPrivateStorage(it1) }
             creationPlaylistViewModel.savePlaylist(
                 Playlist(
-                    name = playlistName!!.text.toString(),
-                    description = playlistDescription?.text.toString(),
+                    name = playlistName!!.text.toString().trim(),
+                    description = playlistDescription?.text.toString().trim(),
                     pathUri = imageUri,
                     trackIds = mutableListOf(),
                     countOfTracks = 0
@@ -182,6 +182,7 @@ class CreationPlaylistFragment : Fragment() {
             ).show()
             findNavController().navigateUp()
         }
+
     }
 
     private fun saveImageToPrivateStorage(uri: Uri) {

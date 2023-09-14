@@ -16,4 +16,8 @@ class PlaylistScreenInteractorImpl(private val repository: PlaylistScreenReposit
     override suspend fun deleteTrackFromPlaylist(trackId: Int, playlist: Playlist) {
         repository.deleteTrackFromPlaylist(trackId, playlist)
     }
+
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        repository.deletePlaylist(playlist)
+    }
 }

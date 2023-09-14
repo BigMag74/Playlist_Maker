@@ -129,5 +129,12 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="bottomSheetTextViewStyle">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+    </style>
+
 
 </resources>

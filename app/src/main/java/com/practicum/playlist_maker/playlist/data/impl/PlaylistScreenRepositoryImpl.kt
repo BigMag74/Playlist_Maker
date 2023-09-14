@@ -34,10 +34,17 @@ class PlaylistScreenRepositoryImpl(private val appDatabase: AppDatabase) :
         deleteTrackWithoutPlaylist(trackId)
     }
 
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        appDatabase.playlistDao().deletePlaylist(convertFromPlaylistToPlaylistEntity(playlist))
+        for (trackId in playlist.trackIds) {
+            deleteTrackWithoutPlaylist(trackId)
+        }
+    }
+
     private suspend fun deleteTrackWithoutPlaylist(trackId: Int) {
         val type: Type = object : TypeToken<List<Int?>?>() {}.type
         val playlists = appDatabase.playlistDao().getPlaylists()
-        var trackIds: List<Int>? = null
+        var trackIds: List<Int>?
 
         for (playlistEntity: PlaylistEntity in playlists) {
             trackIds = Gson().fromJson(

@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -46,7 +48,15 @@ class PlaylistScreenFragment : Fragment() {
     private var shareButton: ImageView? = null
     private var optionsButton: ImageView? = null
     private var bottomSheetContainer: LinearLayout? = null
+    private var bottomSheetEditContainer: LinearLayout? = null
     private var recyclerView: RecyclerView? = null
+    private var bottomSheetEditPlaylistImage: ImageView? = null
+    private var bottomSheetEditPlaylistName: TextView? = null
+    private var bottomSheetEditPlaylistCountOfTracks: TextView? = null
+    private var bottomSheetEditShare: TextView? = null
+    private var bottomSheetEditModify: TextView? = null
+    private var bottomSheetEditDelete: TextView? = null
+    private var overlay: View? = null
 
     private var _binding: FragmentPlaylistScreenBinding? = null
     private val binding get() = _binding!!
@@ -58,10 +68,12 @@ class PlaylistScreenFragment : Fragment() {
     private var trackAdapter: PlaylistScreenAdapter? = null
 
     private var dialog: MaterialAlertDialogBuilder? = null
+    private var dialogDeletePlaylist: MaterialAlertDialogBuilder? = null
 
     private val viewModel: PlaylistScreenViewModel by viewModel { parametersOf(playlistId) }
 
     private lateinit var behavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var behaviorEdit: BottomSheetBehavior<LinearLayout>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,11 +105,19 @@ class PlaylistScreenFragment : Fragment() {
         shareButton = binding.shareButton
         optionsButton = binding.optionsButton
         bottomSheetContainer = binding.bottomSheet
+        bottomSheetEditContainer = binding.bottomSheetEditContainer
         recyclerView = binding.bottomSheetRecyclerView
+        bottomSheetEditPlaylistImage = binding.bottomSheetEditPlaylistImage
+        bottomSheetEditPlaylistName = binding.bottomSheetEditPlaylistName
+        bottomSheetEditPlaylistCountOfTracks = binding.bottomSheetEditPlaylistCountOfTracks
+        bottomSheetEditShare = binding.bottomSheetEditShare
+        bottomSheetEditModify = binding.bottomSheetEditModify
+        bottomSheetEditDelete = binding.bottomSheetEditDelete
+        overlay = binding.overlay
 
         behavior = BottomSheetBehavior.from(bottomSheetContainer!!)
-
-
+        behaviorEdit = BottomSheetBehavior.from(bottomSheetEditContainer!!)
+        behaviorEdit.state = BottomSheetBehavior.STATE_HIDDEN
 
 
         backButton?.setOnClickListener { findNavController().navigateUp() }
@@ -124,6 +144,73 @@ class PlaylistScreenFragment : Fragment() {
             dialog?.show()
         }
         recyclerView?.adapter = trackAdapter
+
+        shareButton?.setOnClickListener { onShareClickListener.invoke() }
+
+        optionsButton?.setOnClickListener {
+            bottomSheetEditPlaylistImage?.let {
+                Glide.with(it)
+                    .load(playlist?.pathUri)
+                    .placeholder(R.drawable.album)
+                    .centerCrop()
+                    .into(bottomSheetEditPlaylistImage!!)
+            }
+            bottomSheetEditPlaylistName?.text = playlist?.name
+            bottomSheetEditPlaylistCountOfTracks?.text =
+                "${playlist?.countOfTracks.toString()} ${getString(R.string.tracks)}"
+            behaviorEdit.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        bottomSheetEditShare?.setOnClickListener { onShareClickListener.invoke() }
+
+        bottomSheetEditDelete?.setOnClickListener {
+            dialogDeletePlaylist =
+                MaterialAlertDialogBuilder(requireContext(), R.style.dialog_style)
+                    .setTitle("${getString(R.string.do_you_want_to_delete_playlist)} «${playlist?.name}»?")
+                    .setNegativeButton(getString(R.string.no_caps)) { _, _ -> }
+                    .setPositiveButton(getString(R.string.yes_caps)) { _, _ ->
+                        playlist?.let { it1 -> viewModel.deletePlaylist(it1) }
+                        findNavController().navigateUp()
+                    }
+            dialogDeletePlaylist?.show()
+        }
+
+    }
+
+    private val onShareClickListener = {
+        if (playlist?.countOfTracks == null || playlist?.countOfTracks!! == 0) {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.there_is_no_track_list_to_share_in_this_playlist),
+                Toast.LENGTH_LONG
+            ).show()
+        } else {
+            var trackList = ""
+            trackAdapter?.tracks!!.forEachIndexed { index, track ->
+                trackList += "${index + 1}. ${track.artistName} - ${track.trackName} (${
+                    SimpleDateFormat(
+                        "mm:ss",
+                        Locale.getDefault()
+                    ).format(track.trackTimeMillis)
+                })\n"
+            }
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            val text: String = "${getString(R.string.playlist)}: ${playlist?.name}\n" +
+                    (if (!playlist?.description.isNullOrEmpty()) {
+                        playlist?.description + "\n"
+                    } else
+                        "") +
+                    "${playlist?.countOfTracks} ${getString(R.string.tracks)}\n" +
+                    trackList
+
+            intent.putExtra(Intent.EXTRA_TEXT, text)
+
+            startActivityOrShowErrorMessage(
+                intent,
+                getString(R.string.there_is_no_app_on_the_device_to_make_this_request)
+            )
+        }
     }
 
 
@@ -131,6 +218,7 @@ class PlaylistScreenFragment : Fragment() {
         super.onResume()
         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
             View.GONE
+
     }
 
     override fun onStop() {
@@ -148,6 +236,16 @@ class PlaylistScreenFragment : Fragment() {
                 Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
         }
+    }
+
+    private fun startActivityOrShowErrorMessage(intent: Intent, message: String) {
+        try {
+            startActivity(intent)
+            behaviorEdit.state = BottomSheetBehavior.STATE_HIDDEN
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        }
+
     }
 
     private fun render(state: PlaylistScreenState?) {
