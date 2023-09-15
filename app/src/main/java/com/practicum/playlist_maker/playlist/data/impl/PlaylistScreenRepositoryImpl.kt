@@ -46,17 +46,16 @@ class PlaylistScreenRepositoryImpl(private val appDatabase: AppDatabase) :
         val playlists = appDatabase.playlistDao().getPlaylists()
         var trackIds: List<Int>?
 
-        for (playlistEntity: PlaylistEntity in playlists) {
+        for (playlistEntity in playlists) {
             trackIds = Gson().fromJson(
                 playlistEntity.trackIds,
                 type
             )
             if (trackIds?.contains(trackId) == true) {
-                appDatabase.trackInPlaylistDao().deleteTrackById(trackId)
-                break
+                return
             }
         }
-
+        appDatabase.trackInPlaylistDao().deleteTrackById(trackId)
     }
 
     private fun convertTrackInPlaylistEntitiesToTracks(tracks: List<TrackInPlaylistsEntity>): List<Track> {

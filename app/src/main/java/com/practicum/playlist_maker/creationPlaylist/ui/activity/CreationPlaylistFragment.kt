@@ -273,6 +273,7 @@ class CreationPlaylistFragment : Fragment() {
                 createButton?.isEnabled = true
             }
             is EditPlaylistState.JustOpened -> {
+                imageUri = playlist?.pathUri
                 createButton?.isEnabled = true
                 createButton?.text = getString(R.string.save)
                 title?.text = getString(R.string.edit)

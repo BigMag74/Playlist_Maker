@@ -7,6 +7,10 @@
     android:background="@color/gray_light"
     tools:context=".playlist.ui.activity.PlaylistScreenFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -86,12 +90,14 @@
             app:layout_constraintTop_toTopOf="@id/playlistTime" />
 
         <ImageView
+            android:layout_marginBottom="100dp"
             android:id="@+id/shareButton"
             android:layout_width="@dimen/dp24"
             android:layout_height="@dimen/dp24"
             android:layout_marginStart="@dimen/common_padding"
             android:layout_marginTop="@dimen/common_padding"
             android:src="@drawable/share_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/playlistTime"
             app:tint="@color/black" />
@@ -108,6 +114,8 @@
             app:tint="@color/black" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/bottomSheet"
@@ -150,6 +158,8 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>
+
+
 
     <View
         android:id="@+id/overlay"

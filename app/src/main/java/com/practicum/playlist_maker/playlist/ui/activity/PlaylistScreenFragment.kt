@@ -110,8 +110,6 @@ class PlaylistScreenFragment : Fragment() {
         }
         recyclerView?.adapter = trackAdapter
 
-
-
         behaviorEdit.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -230,7 +228,10 @@ class PlaylistScreenFragment : Fragment() {
             behaviorEdit.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        bottomSheetEditShare?.setOnClickListener { onShareClickListener.invoke() }
+        bottomSheetEditShare?.setOnClickListener {
+            onShareClickListener.invoke()
+            behaviorEdit.state = BottomSheetBehavior.STATE_HIDDEN
+        }
 
         bottomSheetEditDelete?.setOnClickListener {
             dialogDeletePlaylist =
@@ -336,11 +337,18 @@ class PlaylistScreenFragment : Fragment() {
                     Locale.getDefault()
                 ).format(viewModel.calculatePlaylistTime(state.tracks))
                 playlistTime?.text =
-                    "$minutes ${getString(DateTimeUtil.minuteWordEndingId(minutes.toInt()))}"
+                    "${minutes.replaceFirst("0", "")} ${
+                        getString(
+                            DateTimeUtil.minuteWordEndingId(
+                                minutes.toInt()
+                            )
+                        )
+                    }"
                 tracksPlaceholder?.visibility = View.GONE
                 recyclerView?.visibility = View.VISIBLE
             }
             is PlaylistScreenTracksState.EmptyState -> {
+                playlistTime?.text = getString(R.string.time00_00)
                 recyclerView?.visibility = View.GONE
                 tracksPlaceholder?.visibility = View.VISIBLE
             }
