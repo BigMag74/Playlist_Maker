@@ -1,6 +1,5 @@
 package com.practicum.playlist_maker.mediaLibrary.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -17,11 +15,8 @@ import com.practicum.playlist_maker.databinding.FragmentFavoriteTracksBinding
 import com.practicum.playlist_maker.mediaLibrary.ui.FavoriteScreenState
 import com.practicum.playlist_maker.mediaLibrary.ui.view_model.FavoriteTracksFragmentViewModel
 import com.practicum.playlist_maker.player.domain.model.Track
-import com.practicum.playlist_maker.player.ui.activity.AudioPlayerFragment
 import com.practicum.playlist_maker.search.ui.TrackAdapter
 import com.practicum.playlist_maker.search.ui.TracksClickListener
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
@@ -36,8 +31,6 @@ class FavoriteTracksFragment : Fragment() {
 
     private var _binding: FragmentFavoriteTracksBinding? = null
     private val binding get() = _binding!!
-
-    private var isClickAllowed = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -102,7 +95,6 @@ class FavoriteTracksFragment : Fragment() {
     companion object {
         fun newInstance() = FavoriteTracksFragment()
         const val TRACK = "TRACK"
-        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
 }

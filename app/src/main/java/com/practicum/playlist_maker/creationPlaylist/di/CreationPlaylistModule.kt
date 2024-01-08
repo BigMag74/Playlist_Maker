@@ -4,6 +4,7 @@ import com.practicum.playlist_maker.creationPlaylist.data.impl.CreationPlaylistR
 import com.practicum.playlist_maker.creationPlaylist.domain.api.CreationPlaylistInteractor
 import com.practicum.playlist_maker.creationPlaylist.domain.api.CreationPlaylistRepository
 import com.practicum.playlist_maker.creationPlaylist.domain.impl.CreationPlaylistInteractorImpl
+import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 import com.practicum.playlist_maker.creationPlaylist.ui.view_model.CreationPlaylistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -12,5 +13,5 @@ val creationPlaylistModule = module {
 
     single<CreationPlaylistRepository> { CreationPlaylistRepositoryImpl(get()) }
     single<CreationPlaylistInteractor> { CreationPlaylistInteractorImpl(get()) }
-    viewModel { CreationPlaylistViewModel(get()) }
+    viewModel { (playlist: Playlist) -> CreationPlaylistViewModel(get(), playlist) }
 }

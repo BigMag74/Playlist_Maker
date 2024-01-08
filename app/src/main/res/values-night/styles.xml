@@ -113,4 +113,11 @@
         <item name="colorPrimary">@color/white</item>
     </style>
 
+    <style name="bottomSheetTextViewStyle">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+    </style>
+
 </resources>

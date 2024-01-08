@@ -1,6 +1,5 @@
 package com.practicum.playlist_maker.mediaLibrary.data.impl
 
-import android.net.Uri
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlist_maker.creationPlaylist.data.db.entity.PlaylistEntity
@@ -52,7 +51,7 @@ class PlaylistFragmentRepositoryImpl(private val appDatabase: AppDatabase) :
                 id = playlistEntity.id,
                 name = playlistEntity.name,
                 description = playlistEntity.description,
-                pathUri = Uri.parse(playlistEntity.path),
+                pathUri = playlistEntity.path,
                 trackIds = Gson().fromJson(
                     playlistEntity.trackIds,
                     type
@@ -67,7 +66,7 @@ class PlaylistFragmentRepositoryImpl(private val appDatabase: AppDatabase) :
             track.trackName,
             track.artistName,
             track.trackTimeMillis,
-            track.artworkUrl100,
+            track.artworkUrl60,
             track.trackId,
             track.collectionName,
             track.releaseDate,

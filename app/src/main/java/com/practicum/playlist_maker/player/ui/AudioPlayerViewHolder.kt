@@ -1,5 +1,6 @@
 package com.practicum.playlist_maker.player.ui
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -8,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import com.practicum.playlist_maker.R
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
+import com.practicum.playlist_maker.utils.DateTimeUtil
 
 class AudioPlayerViewHolder(
     view: View,
@@ -20,6 +22,7 @@ class AudioPlayerViewHolder(
     private val playlistCountOfTracks: TextView = itemView.findViewById(R.id.playlistCountOfTracks)
 
 
+    @SuppressLint("SetTextI18n")
     fun bind(playlist: Playlist) {
 
         Glide.with(itemView)
@@ -30,7 +33,15 @@ class AudioPlayerViewHolder(
 
         playlistName.text = playlist.name
         playlistCountOfTracks.text =
-            "${playlist.countOfTracks} ${itemView.context.getString(R.string.tracks)}"
+            "${playlist.countOfTracks} ${
+                playlist.countOfTracks.let { it1 ->
+                    itemView.context.getString(
+                        DateTimeUtil.trackWordEndingId(
+                            it1
+                        )
+                    )
+                }
+            }"
 
         itemView.setOnClickListener { playlistClickListener?.invoke(playlist) }
     }

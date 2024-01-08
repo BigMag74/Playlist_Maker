@@ -1,7 +1,10 @@
 package com.practicum.playlist_maker.player.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,12 +23,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.practicum.playlist_maker.R
-import com.practicum.playlist_maker.databinding.AudioPlayerFragmentBinding
+import com.practicum.playlist_maker.databinding.FragmentAudioPlayerBinding
 import com.practicum.playlist_maker.player.domain.model.Track
-import com.practicum.playlist_maker.player.ui.AddTrackToPlaylistState
-import com.practicum.playlist_maker.player.ui.AudioPlayerAdapter
-import com.practicum.playlist_maker.player.ui.AudioPlayerPlaylistsState
-import com.practicum.playlist_maker.player.ui.AudioPlayerState
+import com.practicum.playlist_maker.player.ui.*
 import com.practicum.playlist_maker.player.ui.view_model.AudioPlayerViewModel
 import com.practicum.playlist_maker.search.ui.activity.SearchFragment
 import com.practicum.playlist_maker.utils.DateTimeUtil
@@ -61,7 +61,7 @@ class AudioPlayerFragment : Fragment() {
     private lateinit var track: Track
     private val audioPlayerViewModel: AudioPlayerViewModel by viewModel { parametersOf(track) }
 
-    private var _binding: AudioPlayerFragmentBinding? = null
+    private var _binding: FragmentAudioPlayerBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -69,7 +69,7 @@ class AudioPlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = AudioPlayerFragmentBinding.inflate(inflater, container, false)
+        _binding = FragmentAudioPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -96,6 +96,10 @@ class AudioPlayerFragment : Fragment() {
             renderAddTrackToPlaylist(it)
         }
 
+        audioPlayerViewModel.favoriteButtonState.observe(viewLifecycleOwner) {
+            renderFavoriteButton(it)
+        }
+
         playlistAdapter = AudioPlayerAdapter()
         playlistAdapter?.onPlayListClicked = {
             audioPlayerViewModel.addTrackToPlaylist(track, it)
@@ -113,6 +117,17 @@ class AudioPlayerFragment : Fragment() {
         super.onStop()
         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView).visibility =
             View.VISIBLE
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            val sourceTreeUri = data?.data
+            context?.contentResolver?.takePersistableUriPermission(
+                sourceTreeUri!!,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+        }
     }
 
     private fun setOnClickListeners() {
@@ -192,7 +207,7 @@ class AudioPlayerFragment : Fragment() {
     private fun initializeIcon() {
         trackIcon?.let {
             Glide.with(it)
-                .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+                .load(track.artworkUrl60.replaceAfterLast('/', "512x512bb.jpg"))
                 .placeholder(R.drawable.album)
                 .centerCrop()
                 .transform(RoundedCorners(8))
@@ -223,7 +238,6 @@ class AudioPlayerFragment : Fragment() {
     private fun render(state: AudioPlayerState) {
         playButton?.isEnabled = state.isPlayButtonEnabled
         playTime?.text = state.progress
-        setLikeImage()
         when (state) {
             is AudioPlayerState.Default, is AudioPlayerState.Prepared, is AudioPlayerState.Paused -> {
                 changePlayButtonImageToPlay()
@@ -268,6 +282,18 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
+    private fun renderFavoriteButton(state: FavoriteButtonState) {
+        when (state) {
+            is FavoriteButtonState.Liked -> {
+                changeLikeButtonImageToRed()
+            }
+            is FavoriteButtonState.UnLiked -> {
+                changeLikeButtonImageToWhite()
+            }
+        }
+
+    }
+
     private fun changePlayButtonImageToPlay() {
         playButton?.setImageResource(R.drawable.play_button)
     }
@@ -276,13 +302,6 @@ class AudioPlayerFragment : Fragment() {
         playButton?.setImageResource(R.drawable.pause_button)
     }
 
-    private fun setLikeImage() {
-        if (track.isFavorite) {
-            changeLikeButtonImageToRed()
-        } else {
-            changeLikeButtonImageToWhite()
-        }
-    }
 
     private fun changeLikeButtonImageToWhite() {
         likeButton?.setImageResource(R.drawable.like_button_not_pressed)

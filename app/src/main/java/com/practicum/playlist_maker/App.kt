@@ -8,6 +8,7 @@ import com.practicum.playlist_maker.player.di.audioPlayerDataModule
 import com.practicum.playlist_maker.player.di.audioPlayerModule
 import com.practicum.playlist_maker.player.di.audioPlayerViewModelModule
 import com.practicum.playlist_maker.player.di.favoriteTrackInteractorModule
+import com.practicum.playlist_maker.playlist.di.playlistScreenModule
 import com.practicum.playlist_maker.search.di.searchDataModule
 import com.practicum.playlist_maker.search.di.searchInteractorModule
 import com.practicum.playlist_maker.search.di.searchRepositoryModule
@@ -44,6 +45,7 @@ class App : Application() {
                 mediaLibraryModule,
                 creationPlaylistModule,
                 playlistFragmentModule,
+                playlistScreenModule,
             )
 
         }

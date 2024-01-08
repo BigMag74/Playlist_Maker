@@ -1,5 +1,6 @@
 package com.practicum.playlist_maker.player.ui.view_model
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.practicum.playlist_maker.creationPlaylist.domain.model.Playlist
 import com.practicum.playlist_maker.mediaLibrary.domain.api.PlaylistFragmentInteractor
@@ -9,6 +10,7 @@ import com.practicum.playlist_maker.player.domain.model.Track
 import com.practicum.playlist_maker.player.ui.AddTrackToPlaylistState
 import com.practicum.playlist_maker.player.ui.AudioPlayerPlaylistsState
 import com.practicum.playlist_maker.player.ui.AudioPlayerState
+import com.practicum.playlist_maker.player.ui.FavoriteButtonState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -17,7 +19,7 @@ import java.util.*
 
 class AudioPlayerViewModel(
     private val audioPlayer: AudioPlayer,
-    private val track: Track,
+    private var track: Track,
     private val favoriteTrackInteractor: FavoriteTrackInteractor,
     private val playlistFragmentInteractor: PlaylistFragmentInteractor
 ) :
@@ -32,8 +34,10 @@ class AudioPlayerViewModel(
     private val _addTrackToPlaylistState = MutableLiveData<AddTrackToPlaylistState>()
     val addTrackToPlaylistState: LiveData<AddTrackToPlaylistState> = _addTrackToPlaylistState
 
-    private var timerJob: Job? = null
+    private val _favoriteButtonState = MutableLiveData<FavoriteButtonState>()
+    val favoriteButtonState: LiveData<FavoriteButtonState> = _favoriteButtonState
 
+    private var timerJob: Job? = null
 
     init {
         setState(AudioPlayerState.Default(track.isFavorite))
@@ -123,8 +127,11 @@ class AudioPlayerViewModel(
     private fun setFavoriteTrack() {
         viewModelScope.launch {
             favoriteTrackInteractor.getFavoriteTrackIds().collect() {
-                state.value?.isFavorite = it.contains(track.trackId)
-                track.isFavorite = it.contains(track.trackId)
+                if (it.contains(track.trackId))
+                    setFavoriteButtonState(FavoriteButtonState.Liked())
+                else
+                    setFavoriteButtonState(FavoriteButtonState.UnLiked())
+                track = track.copy(isFavorite = it.contains(track.trackId))
             }
         }
     }
@@ -136,8 +143,11 @@ class AudioPlayerViewModel(
             viewModelScope.launch { favoriteTrackInteractor.addTrackToFavorite(track) }
         }
 
-        track.isFavorite = !track.isFavorite
-        setState(state.value!!)
+        track = track.copy(isFavorite = !track.isFavorite)
+        if (track.isFavorite)
+            setFavoriteButtonState(FavoriteButtonState.Liked())
+        else
+            setFavoriteButtonState(FavoriteButtonState.UnLiked())
     }
 
     private fun setState(state: AudioPlayerState) {
@@ -150,6 +160,10 @@ class AudioPlayerViewModel(
 
     private fun setAddTrackToPlaylistState(state: AddTrackToPlaylistState) {
         _addTrackToPlaylistState.postValue(state)
+    }
+
+    private fun setFavoriteButtonState(state: FavoriteButtonState) {
+        _favoriteButtonState.postValue(state)
     }
 
     override fun onCleared() {

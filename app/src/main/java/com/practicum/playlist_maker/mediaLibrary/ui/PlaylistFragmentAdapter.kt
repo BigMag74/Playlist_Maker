@@ -10,10 +10,12 @@ class PlaylistFragmentAdapter() :
     RecyclerView.Adapter<PlaylistFragmentViewHolder>() {
     var playlists: ArrayList<Playlist> = ArrayList()
 
+    var onPlayListClicked: ((playlistId: Int) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistFragmentViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.playlist_layout_for_media_library, parent, false)
-        return PlaylistFragmentViewHolder(view)
+        return PlaylistFragmentViewHolder(view, onPlayListClicked)
     }
 
     override fun onBindViewHolder(holder: PlaylistFragmentViewHolder, position: Int) {
